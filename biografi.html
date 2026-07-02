@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biografi Tokoh - Merentas Masa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #0b0b0b;
+            color: #ffffff;
+            opacity: 1;
+            transition: opacity 0.8s ease;
+            padding-top: 100px;
+        }
+
+        /* --- NAVBAR (Sama seperti asal) --- */
+        .headbar {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; 
+            padding: 0 60px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 1000; 
+            background: rgba(0, 0, 0, 0.25); 
+            backdrop-filter: blur(5px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-3px);
+            color: #f1c40f;
+            border-color: rgba(241, 196, 15, 0.4);
+        }
+
+        /* --- LAYOUT BIOGRAFI --- */
+        .bio-container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .bio-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .bio-header h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 2.8rem;
+            color: #f1c40f;
+            text-shadow: 0 0 15px rgba(241,196,15,0.3);
+            margin-bottom: 10px;
+        }
+
+        .bio-era {
+            font-family: 'Arial', sans-serif;
+            color: #2b70e4;
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+        }
+
+        /* Ruangan Gambar Profil Tokoh */
+        .bio-image-box {
+            width: 100%;
+            max-width: 500px;
+            height: 350px;
+            margin: 0 auto 40px auto;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .bio-image-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Kandungan Teks */
+        .bio-content {
+            line-height: 1.8;
+            font-size: 1.1rem;
+            color: #e0e0e0;
+        }
+
+        .bio-section {
+            margin-bottom: 35px;
+            background: rgba(22, 22, 22, 0.6);
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 4px solid #f1c40f;
+        }
+
+        .bio-section h3 {
+            font-family: 'Arial', sans-serif;
+            color: #f1c40f;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .bio-section p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        /* Kesan Responsif */
+        @media (max-width: 768px) {
+            .bio-header h1 { font-size: 2rem; }
+            .bio-image-box { height: 250px; }
+            .headbar { padding: 0 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="headbar">
+        <a href="index.html" class="back-btn" id="btn-kembali">◀ Kembali ke Senarai</a>
+    </nav>
+
+    <div class="bio-container">
+        <div class="bio-header">
+            <h1 id="nama-tokoh">Memuatkan...</h1>
+            <div class="bio-era" id="era-tokoh"></div>
+        </div>
+
+        <div class="bio-image-box">
+            <img id="gambar-tokoh" src="" alt="Gambar Tokoh">
+        </div>
+
+        <div class="bio-content">
+            <div class="bio-section">
+                <h3>Latar Belakang & Asal-Usul</h3>
+                <p id="latar-belakang">Memuatkan maklumat latar belakang...</p>
+            </div>
+
+            <div class="bio-section">
+                <h3>Sumbangan & Peranan Utama</h3>
+                <p id="sumbangan">Memuatkan maklumat sumbangan...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pangkalan Data Ringkas untuk Tokoh-tokoh (Boleh ditambah lagi)
+        const databaseTokoh = {
+            "sultan-muzaffar": {
+                nama: "Sultan Muzaffar Shah",
+                era: "Kesultanan Melayu Melaka (1445–1459)",
+                gambar: "tokoh1.jpg",
+                fallback: "https://placehold.co/500x350/1a1a1a/ffffff?text=Sultan+Muzaffar",
+                latarBelakang: "Sultan Muzaffar Shah merupakan sultan kelima bagi Kesultanan Melayu Melaka. Baginda menaiki takhta selepas menggantikan kekandanya, Sultan Abu Syahid, dalam satu kemelut politik istana. Kehadiran baginda membawa era kestabilan baharu dan baginda dikenali sebagai seorang pemerintah yang sangat mementingkan keadilan serta kebajikan rakyat.",
+                sumbangan: "Antara sumbangan terbesar baginda ialah mengukuhkan sistem perundangan empayar menerusi dokumentasi Hukum Kanun Melaka dan Undang-Undang Laut Melaka. Di bawah pemerintahan baginda juga, Melaka berjaya menepis dua kali serangan besar daripada tentera Siam melalui strategi ketenteraan yang genius yang dibantu oleh Tun Perak, sekali gus mengekalkan kedaulatan Melaka."
+            },
+            "hang-tuah": {
+                nama: "Laksamana Hang Tuah",
+                era: "Zaman Keemasan Kesultanan Melayu Melaka",
+                gambar: "tokoh2.jpg",
+                fallback: "https://placehold.co/500x350/1a1a1a/ffffff?text=Hang+Tuah",
+                latarBelakang: "Hang Tuah dilahirkan di Kampung Sungai Duyung, Melaka, sebagai anak kepada sepasang suami isteri miskin, Hang Mahmud dan Dang Merdu Wati. Sejak kecil lagi, beliau telah menunjukkan keberanian, kebijaksanaan, dan ketangkasan bermain senjata bersama empat orang sahabat karibnya: Hang Jebat, Hang Kasturi, Hang Lekir, dan Hang Lekiu.",
+                sumbangan: "Dilantik sebagai Laksamana Melaka, beliau menjadi lambang kesetiaan mutlak kepada institusi beraja. Beliau mengawal laluan perdagangan di Selat Melaka daripada ancaman lanun dan mengetuai pelbagai misi diplomatik ke luar negara seperti ke China, India, Turki, dan Siam. Kata-kata keramatnya, 'Takkan Melayu Hilang di Dunia', terus menjadi azimat semangat bangsa."
+            },
+            "tun-perak": {
+                nama: "Bendahara Tun Perak",
+                era: "Pentadbir Empayar Melaka (1456–1498)",
+                gambar: "tokoh3.jpg",
+                fallback: "https://placehold.co/500x350/1a1a1a/ffffff?text=Tun+Perak",
+                latarBelakang: "Tun Perak merupakan anak kepada Bendahara Sri Wak Raja. Beliau memulakan kerjayanya sebagai Penghulu Klang sebelum bakat kepemimpinan dan kebijaksanaan strateginya dikesan oleh pihak istana selepas berjaya membawa tentera dari Klang untuk mempertahankan Melaka daripada serangan Siam.",
+                sumbangan: "Beliau merupakan 'Arkitek Keagungan Melaka' yang berkhidmat di bawah empat orang Sultan (Sultan Muzaffar Shah, Sultan Mansur Shah, Sultan Alauddin Riayat Shah, dan Sultan Mahmud Shah). Beliau berjaya meluaskan empayar Melaka meliputi sebahagian besar Semenanjung Tanah Melayu dan pantai timur Sumatera menerusi strategi ketenteraan dan perkahwinan diplomatik yang sangat pintar."
+            }
+        };
+
+        // Fungsi untuk mengambil parameter 'tokoh' dari URL
+        function dapatkanQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
+        }
+
+        // Paparkan data berdasarkan parameter URL
+        const idTokoh = dapatkanQueryParam('tokoh');
+        const data = databaseTokoh[idTokoh];
+
+        if (data) {
+            document.title = `Biografi ${data.nama} - Merentas Masa`;
+            document.getElementById('nama-tokoh').innerText = data.nama;
+            document.getElementById('era-tokoh').innerText = data.era;
+            document.getElementById('latar-belakang').innerText = data.latarBelakang;
+            document.getElementById('sumbangan').innerText = data.sumbangan;
+            
+            // Set gambar dan fallback jika tiada fail gambar tempatan
+            const imgEl = document.getElementById('gambar-tokoh');
+            imgEl.src = data.gambar;
+            imgEl.onerror = function() {
+                this.src = data.fallback;
+            };
+        } else {
+            // Jika ID tokoh salah atau tiada dalam pangkalan data
+            document.getElementById('nama-tokoh').innerText = "Tokoh Tidak Ditemui";
+            document.getElementById('latar-belakang').innerText = "Maaf, biografi untuk tokoh ini belum dikemas kini dalam sistem.";
+            document.getElementById('sumbangan').innerText = "-";
+        }
+
+        // Animasi keluar halaman (Fade out) apabila butang kembali ditekan
+        document.getElementById('btn-kembali').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.body.style.opacity = "0";
+            setTimeout(() => {
+                window.location.href = this.getAttribute('href');
+            }, 800);
+        });
+    </script>
+</body>
+</html>

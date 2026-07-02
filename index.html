@@ -1,0 +1,902 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utama - Koswer Sejarah IML513</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth; 
+        }
+
+        body {
+            background-color: #f5f5f0; 
+            font-family: 'Georgia', serif;
+            overflow-x: hidden; 
+            transition: opacity 0.8s ease;
+        }
+
+        /* --- HEADBAR / NAVBAR NAVIGASI --- */
+        .headbar {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; 
+            padding: 0 60px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 1000; 
+            background: rgba(0, 0, 0, 0.25); 
+            backdrop-filter: blur(5px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #2b70e4; 
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px; 
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Arial', sans-serif; 
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.85;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        /* --- SECTION 1: LANDING HERO --- */
+        .landing-container {
+            position: relative;
+            width: 100%;
+            height: 100vh; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .bg-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0; 
+            pointer-events: none; 
+        }
+
+        .title-container {
+            text-align: center;
+            opacity: 1; 
+            transform: scale(1); 
+            z-index: 3; 
+            padding: 20px;
+        }
+
+        .title-container h1 {
+            font-size: 3.5rem;
+            color: #ffffff; 
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 3px 15px rgba(0,0,0,0.6);
+        }
+
+        .title-container p {
+            font-size: 1.5rem;
+            color: #ffffff; 
+            font-style: italic;
+            margin-bottom: 30px;
+            text-shadow: 0 3px 15px rgba(0,0,0,0.6);
+        }
+
+        .enter-btn {
+            padding: 12px 35px;
+            font-size: 1.2rem;
+            background-color: #ffffff; 
+            color: #000000; 
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .enter-btn:hover {
+            background-color: #e6e6e6; 
+            transform: translateY(-3px);
+        }
+
+        /* --- SEKSYEN KANDUNGAN BAWAH --- */
+        .content-section {
+            padding: 100px 40px;
+            text-align: center;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .content-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+        }
+
+        #about {
+            background-color: #f2efe4; 
+            color: #2a2421; 
+        }
+
+        .about-row-container {
+            width: 100%;
+            max-width: 1200px;
+            overflow-x: auto; 
+            padding: 20px 10px 40px 10px;
+            display: flex;
+            justify-content: flex-start;
+            gap: 25px;
+        }
+
+        .flip-card {
+            background-color: transparent;
+            width: 300px;
+            height: 380px;
+            perspective: 1000px; 
+            flex-shrink: 0; 
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            box-shadow: 0 6px 20px rgba(42, 36, 33, 0.08);
+            border-radius: 16px;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden; 
+            backface-visibility: hidden;
+            border-radius: 16px;
+            padding: 30px 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid rgba(42, 36, 33, 0.1);
+        }
+
+        .flip-card-front {
+            background-color: #faf8f2;
+            color: #2a2421;
+        }
+
+        .flip-card-front h3 {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.4rem;
+            margin-top: 15px;
+            color: #2a2421;
+        }
+        
+        .flip-card-front .card-icon {
+            font-size: 3.5rem;
+        }
+
+        .flip-card-front .hint-text {
+            font-size: 0.8rem;
+            color: #9c9286;
+            margin-top: 20px;
+            font-style: italic;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .flip-card-back {
+            background-color: #2a2421;
+            color: #f2efe4;
+            transform: rotateY(180deg); 
+            text-align: center; 
+            align-items: center; 
+        }
+
+        .flip-card-back h4 {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.15rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+            border-bottom: 2px solid #2b70e4;
+            padding-bottom: 4px;
+            width: 100%;
+        }
+
+        .flip-card-back p {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #d1cbb7;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* --- SECTION 3: CONTACT US --- */
+        #contact {
+            background-color: #0b0b0b; 
+            color: #ffffff; 
+            padding: 100px 40px 60px 40px; 
+            min-height: calc(100vh - 60px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .contact-container {
+            display: flex;
+            gap: 50px;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: left;
+            align-items: flex-start;
+        }
+
+        .contact-form-side {
+            flex: 1;
+            background-color: #161616; 
+            padding: 40px;
+            border-radius: 8px;
+        }
+
+        .contact-form-side span {
+            font-size: 0.9rem;
+            color: #888888;
+            font-family: 'Arial', sans-serif;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .contact-form-side h3 {
+            font-size: 2.8rem;
+            font-weight: bold;
+            margin-bottom: 25px;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #888888;
+            margin-bottom: 8px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            background-color: #222222;
+            border: 1px solid #333333;
+            padding: 14px;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.9rem;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background: transparent;
+            color: #ffffff;
+            border: 1px solid #ffffff;
+            padding: 14px;
+            font-size: 1rem;
+            font-family: 'Arial', sans-serif;
+            border-radius: 30px; 
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        .contact-info-side {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+        }
+
+        .contact-description {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.95rem;
+            color: #999999;
+            line-height: 1.6;
+        }
+
+        .info-grid-2x2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .info-icon {
+            font-size: 1.8rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .info-item h4 {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .info-item p {
+            font-size: 0.9rem;
+            color: #888888;
+        }
+
+        .main-footer {
+            background-color: #0b0b0b;
+            color: #555555;
+            text-align: center;
+            padding: 25px 20px;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.85rem;
+            border-top: 1px solid #161616;
+        }
+
+        /* --- WIDGET KANAN BAWAH --- */
+        .right-widgets-wrapper {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 12px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .hover-widget-btn {
+            background: #ffffff;
+            color: #000000;
+            height: 54px;
+            padding: 0 16px;
+            border-radius: 27px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+            max-width: 54px; 
+            cursor: pointer;
+        }
+
+        .hover-widget-btn .widget-emoji {
+            font-size: 1.3rem;
+        }
+
+        .hover-widget-btn .text-reveal {
+            max-width: 0;
+            opacity: 0;
+            white-space: nowrap;
+            font-size: 0.88rem;
+            font-weight: bold;
+            transition: max-width 0.4s ease, opacity 0.3s ease, margin-left 0.3s ease;
+        }
+
+        .hover-widget-btn:hover {
+            max-width: 220px; 
+            padding: 0 20px;
+            background-color: #e6e6e6;
+        }
+
+        .hover-widget-btn:hover .text-reveal {
+            opacity: 1;
+            margin-left: 10px;
+        }
+
+        #communityBtn:hover .text-reveal { max-width: 140px; }
+        #chatBadgeBtn:hover .text-reveal { max-width: 100px; }
+
+        /* --- CHATBOX TINGKAP AI (WARNA KRIM & COKLAT GELAP) --- */
+        .ai-chat-container {
+            position: relative;
+        }
+
+        .chat-window {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            width: 360px;
+            height: 480px;
+            background: #f2efe4; 
+            border-radius: 16px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.15);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(42, 36, 33, 0.15); 
+        }
+
+        .chat-header {
+            background: #2a2421; 
+            color: #f2efe4;      
+            padding: 18px 20px;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1rem;
+        }
+
+        .chat-header .close-btn {
+            cursor: pointer;
+            font-size: 1.4rem;
+            color: #f2efe4;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background-color: #f2efe4; 
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 14px;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            font-family: 'Arial', sans-serif;
+            white-space: pre-line; 
+        }
+
+        .message.ai {
+            background: #2a2421; 
+            color: #f2efe4;      
+            align-self: flex-start;
+            border-top-left-radius: 2px;
+        }
+
+        .message.user {
+            background: #111111; 
+            color: #ffffff;      
+            align-self: flex-end;
+            border-top-right-radius: 2px;
+        }
+
+        .chat-input-area {
+            padding: 15px 20px;
+            background: #2a2421; 
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            background: #111111; 
+            border: 1px solid #444444;
+            color: #f2efe4; 
+            padding: 12px 16px;
+            border-radius: 24px;
+            outline: none;
+        }
+
+        .chat-input-area button {
+            background: #f2efe4; 
+            border: none;
+            color: #111111;      
+            padding: 10px 18px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .chat-input-area button:hover {
+            background: #e1ded3;
+        }
+        
+        .chat-disclaimer {
+            font-size: 0.72rem;
+            color: #999999;
+            text-align: center;
+            padding: 0 20px 10px 20px;
+            background: #2a2421;
+        }
+
+        @media (max-width: 900px) {
+            .contact-container { flex-direction: column; gap: 40px; }
+            .contact-form-side, .contact-info-side { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="headbar">
+        <a href="#home" class="logo">aizwebs<span>i</span>te</a>
+        <div class="nav-links">
+            <a href="#home">Utama</a>
+            <a href="#about">Mengenai Kami</a>
+            <a href="#contact">Hubungi Kami</a>
+            <a href="Help.html">Bantuan</a>
+            <a href="FAQ.html">Soalan Lazim</a>
+        </div>
+    </nav>
+
+    <div class="landing-container" id="home">
+        <video autoplay loop playsinline class="bg-video" id="bgVideo">
+            <source src="video_1.mp4" type="video/mp4">
+        </video>
+        <div class="title-container">
+            <h1>Merentas Masa</h1>
+            <p>Eksplorasi Sejarah Melayu</p>
+            <button class="enter-btn" onclick="goToMenu(event)">Mula Meneroka</button>
+        </div>
+    </div>
+
+  <section class="content-section" id="about">
+        <h2>Mengenai Kami</h2>
+        
+        <div class="about-row-container">
+            
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="card-icon">🧐</div>
+                        <h3>Siapa Kami</h3>
+                        <p class="hint-text">Sentuh untuk info</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h4>Ahli Kumpulan</h4>
+                        <p>Kami merupakan kumpulan pembangun koswer digital interaktif bagi subjek <strong>IML513 (Pembangunan Koswer)</strong> dari Fakulti Pengurusan Maklumat, UiTM Kampus Puncak Perdana. Kami komited menggabungkan elemen IT dengan peristiwa sejarah tanah melayu.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="card-icon">📝</div>
+                        <h3>Latar Belakang</h3>
+                        <p class="hint-text">Sentuh untuk info</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h4>Latar Penubuhan</h4>
+                        <p>Portal <strong>"Merentas Masa"</strong> ini dibina demi memenuhi tugasan akademik IML513. Menyedari kaedah rujukan konvensional yang kadangkala hambar, kami mengambil inisiatif membina portal multimedia interaktif untuk menghidupkan naratif sejarah lampau.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="card-icon">🔑</div>
+                        <h3>Misi Kami</h3>
+                        <p class="hint-text">Sentuh untuk info</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h4>Misi Utama</h4>
+                        <p>Menyediakan sebuah platform pembelajaran digital Sejarah Melayu yang interaktif, inklusif, dan mudah diakses bagi memupuk rasa cinta akan warisan dan asal usul bangsa.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="card-icon">💡</div>
+                        <h3>Visi Kami</h3>
+                        <p class="hint-text">Sentuh untuk info</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h4>Visi Masa Depan</h4>
+                        <p>Menjadi pelopor koswer digital akademik yang merevolusikan kaedah rujukan sejarah tempatan menerusi integrasi teknologi multimedia bermutu tinggi yang setanding standard global.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="card-icon">✍</div>
+                        <h3>Tawaran Kami</h3>
+                        <p class="hint-text">Sentuh untuk info</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h4>Modul & Kandungan</h4>
+                        <p>Kami menawarkan maklumat tentang Peristiwa Sejarah Melayu, penceritaan biografi tokoh terbilang, galeri akses arkib digital lama, serta kuiz minda interaktif bagi menguji kefahaman anda.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flip-card">
+                <div class="flip-card-inner">
+                    <div class="flip-card-front">
+                        <div class="card-icon">🤷‍♂️</div>
+                        <h3>Kumpulan Sasaran</h3>
+                        <p class="hint-text">Sentuh untuk info</p>
+                    </div>
+                    <div class="flip-card-back">
+                        <h4>Sasaran Pengguna</h4>
+                        <p>Koswer ini direka khas untuk para pelajar sekolah, mahasiswa universiti, para pendidik subjek sejarah, serta peminat tegar yang ingin menerokai garis masa kegemilangan tamadun Melayu.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="contact-container">
+            
+            <div class="contact-form-side">
+                <span></span>
+                <h3>Hubungi Kami</h3>
+                
+                <form action="#" onsubmit="event.preventDefault(); alert('Mesej anda telah dihantar!');">
+                    <div class="form-group">
+                        <label>Nama</label>
+                        <input type="text" placeholder="Nama Anda..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Emel</label>
+                        <input type="email" placeholder="contoh@emelanda.com" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Subjek</label>
+                        <input type="text" placeholder="Tajuk Mesej..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Mesej</label>
+                        <textarea rows="5" placeholder="Tulis mesej anda di sini..." required></textarea>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn">Hantar Sekarang</button>
+                </form>
+            </div>
+
+            <div class="contact-info-side">
+                <p class="contact-description">
+                    Ada sebarang pertanyaan, cadangan, atau maklum balas mengenai koswer "Merentas Masa" ini? Sila hubungi kami melalui borang disediakan atau maklumat perhubungan di bawah. Kami akan membalas pertanyaan anda dengan kadar segera.
+                </p>
+                
+                <div class="info-grid-2x2">
+                    <a href="tel:+601169282749" class="info-item" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="info-icon">📞</div>
+                        <h4>Nombor Telefon</h4>
+                        <p>+601169282749</p>
+                    </a>
+                    
+                    <a href="mailto:aaafiqahhh@gmail.com" class="info-item" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="info-icon">✉️</div>
+                        <h4>Alamat Emel</h4>
+                        <p>aaafiqahhh@gmail.com</p>
+                    </a>
+                    
+                    <a href="https://wa.me/601169282749" target="_blank" class="info-item" style="text-decoration: none; color: inherit; display: block;">
+                        <div class="info-icon">💬</div>
+                        <h4>Whatsapp</h4>
+                        <p>+601169282749</p>
+                    </a>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">📍</div>
+                        <h4>Pejabat Kami</h4>
+                        <p>UiTM Kampus Puncak Perdana, Shah Alam, Selangor</p>
+                    </div>
+                </div>
+                <div class="map-box">
+                    <iframe 
+                        src="https://maps.google.com/maps?q=UiTM%20Puncak%20Perdana&t=&z=13&ie=UTF8&iwloc=&output=embed" 
+                        allowfullscreen="" 
+                        loading="lazy" 
+                        referrerpolicy="no-referrer-when-downgrade">
+                    </iframe>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+ 
+    <footer class="main-footer">
+        <p>© 2026 aizwebsite. Hak Cipta Terpelihara.</p>
+    </footer>
+
+    <div class="right-widgets-wrapper">
+        <div class="hover-widget-btn" id="communityBtn" onclick="goToCommunity(event)">
+            <span class="widget-emoji">🎀</span><span class="text-reveal">Sertai Komuniti</span>
+        </div>
+
+        <div class="ai-chat-container">
+            <div class="hover-widget-btn" id="chatBadgeBtn" onclick="toggleChat()">
+                <span class="widget-emoji">💬</span><span class="text-reveal">Sembang AI</span>
+            </div>
+            
+            <div class="chat-window" id="chatWindow">
+                <div class="chat-header">
+                    <span>Asisten Sejarah AI</span>
+                    <span class="close-btn" onclick="toggleChat()">×</span>
+                </div>
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message ai">Salam! Saya Asisten AI Sejarah anda untuk portal Merentas Masa. Ada apa-apa soalan mengenai Sejarah Melayu atau penggunaan koswer ini? Ditanya sahaja! 😊</div>
+                </div>
+                <div class="chat-input-area">
+                    <input type="text" id="userInput" placeholder="Tanya sesuatu..." onkeypress="handleKeyPress(event)">
+                    <button id="sendBtn" onclick="sendMessage()">Hantar</button>
+                </div>
+                <div class="chat-disclaimer">AI Model berasaskan pangkalan data pengetahuan sejarah IML513.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // STRATEGI KEKAL SENYAP (MUTED):
+        // ==========================================
+        const video = document.getElementById('bgVideo');
+
+        // Pastikan video sentiasa senyap dan terus dimainkan (melepas sekatan pelayar)
+        video.muted = true;
+        video.play().catch(error => console.log("Autoplay tersekat:", error));
+
+        function dapatkanResponsAI(soalan) {
+            const s = soalan.toLowerCase().trim();
+
+            if (s === 'hi' || s === 'hai' || s === 'hello' || s === 'salam' || s === 'assalamualaikum') {
+                return "Hi! Selamat datang kembali ke portal Merentas Masa. Ada apa-apa yang boleh saya bantu dalam pembelajaran Sejarah Melayu hari ini? 😊";
+            }
+            if (s.includes('terima kasih') || s === 'tq' || s === 'thank you' || s === 'mekasih') {
+                return "Sama-sama! Gembira dapat membantu anda. Jika ada soalan sejarah yang lain, tanyalah lagi ya! ";
+            }
+
+            const luarTopik = ['matematik', 'koding', 'coding', 'programming', 'resepi', 'masak', 'lirik', 'html', 'css', 'javascript', 'cuaca', 'berita', 'politik'];
+            for (let word of luarTopik) {
+                if (s.includes(word)) {
+                    return "Maaf, saya hanya dilatih untuk membimbing anda mengenai topik Sejarah Melayu dan sistem koswer Merentas Masa ini sahaja. Sila kemukakan soalan berkaitan topik tersebut.";
+                }
+            }
+
+            if (s.includes('parameswara') || s.includes('pengasas')) {
+                return "Parameswara ialah pengasas Kesultanan Melayu Melaka sekitar tahun 1400. Baginda memilih Melaka kerana kedudukannya yang strategik di Selat Melaka serta peristiwa unik anjing pemburu baginda ditendang oleh seekor pelanduk putih di bawah pohon Melaka. Maklumat lanjut ada di halaman Tokoh.";
+            }
+            if (s.includes('hang tuah') || s.includes('laksamana')) {
+                return "Laksamana Hang Tuah merupakan tokoh pahlawan terbilang Melaka yang melambangkan kesetiaan tidak berbelah bahagi kepada Sultan. Beliau terkenal dengan falsafah 'Takkan Melayu Hilang di Dunia'. Anda boleh membaca biografi penuh beliau di bahagian tokoh terbilang.";
+            }
+            if (s.includes('tun perak') || s.includes('bendahara')) {
+                return "Bendahara Tun Perak ialah arkitek politik dan strategi ketenteraan teragung Melaka. Beliau berkhidmat di bawah 4 orang Sultan dan berjaya mempertahankan Melaka daripada serangan Siam menggunakan strategi menyalakan jamung pada pokok bakau.";
+            }
+            if (s.includes('melaka') || s.includes('kesultanan')) {
+                return "Kesultanan Melayu Melaka mencapai zaman kegemilangan pada abad ke-15 menjadi emporium perdagangan antarabangsa. Struktur nota penuh mengenai garis masa kebangkitan, zaman keemasan, sehingga kejatuhannya pada 1511 boleh diakses di halaman 'Kesultanan Melayu'.";
+            }
+
+            if (s.includes('koswer') || s.includes('modul') || s.includes('halaman') || s.includes('laman')) {
+                return "Koswer digital 'Merentas Masa' ini mengandungi beberapa modul rujukan utama:\n" +
+                       "• Nota Garis Masa Sejarah\n" +
+                       "• Biografi Tokoh Terbilang\n" +
+                       "• Galeri Akses Arkib Digital\n" +
+                       "• Ujian Minda & Kuiz Interaktif\n" +
+                       "• Dinding Interaksi Komuniti";
+            }
+            if (s.includes('kuiz') || s.includes('test') || s.includes('soalan')) {
+                return "Modul Kuiz Interaktif kami boleh diakses melalui bahagian fail kuiz interaktif. Ia direka khas menggunakan elemen multimedia interaktif untuk menguji tahap kefahaman anda selepas membaca modul nota sejarah.";
+            }
+            if (s.includes('arkib') || s.includes('gambar') || s.includes('manuskrip')) {
+                return "Galeri Arkib menyediakan koleksi imej artifak kuno, peta navigasi lama, serta manuskrip sejarah asli untuk memberikan gambaran visual yang lebih jelas mengenai sejarah tanah air.";
+            }
+            if (s.includes('komuniti') || s.includes('community') || s.includes('forum')) {
+                return "Halaman Dinding Komuniti membolehkan para pengguna bertukar pandangan, meninggalkan komen, atau berkongsi nota ringkas bersama pengguna lain secara interaktif.";
+            }
+            if (s.includes('bantuan') || s.includes('help') || s.includes('rosak') || s.includes('masalah')) {
+                return "Halaman Bantuan menyediakan panduan penyelesaian masalah teknikal seperti kegagalan memuatkan video, imej kabur, atau masalah navigasi sistem.";
+            }
+
+            return "Pertanyaan yang bagus mengenai '" + soalan + "'. Sebagai asisten AI koswer Merentas Masa, saya mencadangkan anda menyemak maklumat tersebut secara terperinci di dalam fail modul utama kami. Sila pastikan soalan anda fokus kepada unit pembelajaran Sejarah Melayu.";
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const messageText = input.value.trim();
+            if (messageText === '') return;
+
+            const chatMessages = document.getElementById('chatMessages');
+            
+            const userDiv = document.createElement('div');
+            userDiv.className = 'message user';
+            userDiv.innerText = messageText;
+            chatMessages.appendChild(userDiv);
+            input.value = '';
+
+            const aiDiv = document.createElement('div');
+            aiDiv.className = 'message ai';
+            aiDiv.innerText = "Sedang memproses maklumat...";
+            chatMessages.appendChild(aiDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+
+            setTimeout(() => {
+                const jawapan = dapatkanResponsAI(messageText);
+                aiDiv.innerText = jawapan;
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 600);
+        }
+
+        function toggleChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = (chatWindow.style.display === 'none' || chatWindow.style.display === '') ? 'flex' : 'none';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') sendMessage();
+        }
+
+        function goToMenu(e) { e.stopPropagation(); window.location.href = "menu.html"; }
+        function goToCommunity(e) { e.stopPropagation(); window.location.href = "community.html"; }
+    </script>
+</body>
+</html>

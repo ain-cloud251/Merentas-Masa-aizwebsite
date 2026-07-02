@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tokoh Terbilang - Merentas Masa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            /* GANTIKAN 'background.jpg' dengan nama fail gambar anda.
+               linear-gradient di bawah berfungsi sebagai lapisan gelap (overlay) 
+               supaya teks anda tetap jelas dan mudah dibaca.
+            */
+            background-image: linear-gradient(rgba(11, 11, 11, 0.85), rgba(11, 11, 11, 0.85)), url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #ffffff;
+            animation: fadeIn 1s ease;
+            transition: opacity 0.8s ease;
+        }
+
+
+        body {
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            background-color: #0b0b0b;
+            color: #ffffff;
+            animation: fadeIn 1s ease;
+            transition: opacity 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- HEADBAR / NAVBAR NAVIGASI --- */
+        .headbar {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; 
+            padding: 0 60px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 1000; 
+            background: rgba(0, 0, 0, 0.25); 
+            backdrop-filter: blur(5px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .left-nav-group {
+            display: flex;
+            align-items: center;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-3px);
+            color: #f1c40f;
+            border-color: rgba(241, 196, 15, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px; 
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Arial', sans-serif; 
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.85;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        /* --- CONTAINER UTAMA --- */
+        .tokoh-container {
+            min-height: 100vh;
+            padding: 140px 40px 60px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .tokoh-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .tokoh-header h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 3rem;
+            color: #f1c40f;
+            text-shadow: 0 0 15px rgba(241,196,15,0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .tokoh-header p {
+            font-size: 1.2rem;
+            color: #bdc3c7;
+            font-style: italic;
+        }
+
+        /* --- BUTANG PENAPISAN (FILTER) --- */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(22, 22, 22, 0.8);
+            border: 1px solid rgba(241, 196, 15, 0.3);
+            color: #ffffff;
+            padding: 10px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #f1c40f;
+            color: #0b0b0b;
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
+            border-color: #f1c40f;
+        }
+
+        /* --- GRID KAD TOKOH --- */
+        .tokoh-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .tokoh-card {
+            background: rgba(22, 22, 22, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tokoh-card:hover {
+            transform: translateY(-10px);
+            border-color: #f1c40f;
+            box-shadow: 0 15px 30px rgba(241, 196, 15, 0.1);
+        }
+
+        .tokoh-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        .tokoh-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            filter: grayscale(30%);
+        }
+
+        .tokoh-card:hover .tokoh-img {
+            transform: scale(1.08);
+            filter: grayscale(0%);
+        }
+
+        .tokoh-tag {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background: rgba(241, 196, 15, 0.9);
+            color: #0b0b0b;
+            padding: 4px 12px;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        .tokoh-info {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .tokoh-info h2 {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin-bottom: 5px;
+            transition: color 0.3s;
+        }
+
+        .tokoh-card:hover .tokoh-info h2 {
+            color: #f1c40f;
+        }
+
+        .tokoh-era {
+            font-size: 0.85rem;
+            color: #2b70e4;
+            font-family: 'Arial', sans-serif;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .tokoh-desc {
+            font-size: 0.95rem;
+            color: #bdc3c7;
+            line-height: 1.6;
+            font-style: italic;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .tokoh-btn {
+            display: inline-block;
+            text-align: center;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 10px 0;
+            width: 100%;
+            border-radius: 8px;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tokoh-btn:hover {
+            background: rgba(241, 196, 15, 0.1);
+            border-color: #f1c40f;
+            color: #f1c40f;
+        }
+
+        /* --- TETINGKAP MODAL (POP-UP BIOGRAFI) --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85); 
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: #121212;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+            width: 90%;
+            max-width: 750px;
+            max-height: 85vh;
+            border-radius: 16px;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+
+            /* Sembunyikan scrollbar untuk Firefox & IE/Edge */
+            -ms-overflow-style: none;  
+            scrollbar-width: none;  
+        }
+
+        /* Sembunyikan scrollbar untuk Chrome, Safari & Opera */
+        .modal-box::-webkit-scrollbar {
+            display: none;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2rem;
+            color: #ffffff;
+            cursor: pointer;
+            transition: color 0.3s;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            color: #f1c40f;
+        }
+
+        .modal-hero-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-bottom: 3px solid #f1c40f;
+        }
+
+        .modal-body {
+            padding: 35px;
+        }
+
+        .modal-title {
+            font-family: 'Arial', sans-serif;
+            font-size: 2rem;
+            color: #f1c40f;
+            margin-bottom: 5px;
+        }
+
+        .modal-era {
+            font-family: 'Arial', sans-serif;
+            color: #2b70e4;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        .modal-section {
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.02);
+            padding: 20px;
+            border-left: 4px solid #f1c40f;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .modal-section h3 {
+            font-family: 'Arial', sans-serif;
+            color: #f1c40f;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+        }
+
+        .modal-section p {
+            line-height: 1.7;
+            color: #dcdde1;
+            text-align: justify;
+        }
+
+        /* --- RESPONSIVITI --- */
+        @media (max-width: 768px) {
+            .headbar { padding: 0 20px; }
+            .back-btn { padding: 6px 10px; font-size: 0.8rem; }
+            .tokoh-container { padding: 120px 20px 40px 20px; }
+            .tokoh-header h1 { font-size: 2.2rem; }
+            .tokoh-grid { grid-template-columns: 1fr; }
+            .modal-body { padding: 20px; }
+            .modal-title { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="headbar" onclick="event.stopPropagation();">
+        <div class="left-nav-group">
+            <a href="menu.html" class="back-btn">◀ Kembali</a>
+        </div>
+        <div class="nav-links">
+            <a href="menu.html">Utama</a>
+            <a href="#">Mengenai Kami</a>
+            <a href="#">Hubungi Kami</a>
+            <a href="Help.html">Bantuan</a>
+            <a href="Faq.html">Soalan Lazim</a>
+        </div>
+    </nav>
+
+    <div class="tokoh-container">
+        <div class="tokoh-header">
+            <h1>Tokoh Terbilang</h1>
+            <p>"Wira dan khazanah bangsa yang memahat nama dalam lipatan sejarah keagungan Melayu."</p>
+        </div>
+
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterTokoh('semua', event)">Semua Tokoh</button>
+            <button class="filter-btn" onclick="filterTokoh('pemerintah', event)">Pemerintah & Sultan</button>
+            <button class="filter-btn" onclick="filterTokoh('pahlawan', event)">Pahlawan & Pejuang</button>
+            <button class="filter-btn" onclick="filterTokoh('diplomat', event)">Diplomat & Pentadbir</button>
+        </div>
+
+        <div class="tokoh-grid">
+
+            <div class="tokoh-card" data-category="pemerintah">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh1.jpg" alt="Sultan Muzaffar Shah" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Sultan+Muzaffar'">
+                    <span class="tokoh-tag">Sultan</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Sultan Muzaffar Shah</h2>
+                    <div class="tokoh-era">Kesultanan Melayu Melaka (1445–1459)</div>
+                    <p class="tokoh-desc">Sultan Melaka kelima yang membawa kestabilan, mengukuhkan perundangan menerusi Hukum Kanun Melaka, and berjaya menepis serangan tentera Siam.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh1')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="pahlawan">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh2.jpg" alt="Laksamana Hang Tuah" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Hang+Tuah'">
+                    <span class="tokoh-tag">Laksamana</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Laksamana Hang Tuah</h2>
+                    <div class="tokoh-era">Kesultanan Melayu Melaka</div>
+                    <p class="tokoh-desc">Ikon pahlawan Melayu yang melambangkan kesetiaan mutlak, keberanian luar biasa, serta ketangkasan seni silat di medan pertempuran.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh2')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="diplomat">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh3.jpg" alt="Bendahara Tun Perak" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Tun+Perak'">
+                    <span class="tokoh-tag">Bendahara</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Bendahara Tun Perak</h2>
+                    <div class="tokoh-era">Pentadbir Empayar (1456–1498)</div>
+                    <p class="tokoh-desc">Ahli strategi dan diplomat agung yang berkhidmat di bawah empat orang Sultan. Beliau merupakan arkitek utama di sebalik perluasan kuasa empayar Melaka.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh3')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="pahlawan">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh4.jpg" alt="Mat Kilau" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Mat+Kilau'">
+                    <span class="tokoh-tag">Pejuang</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Mat Kilau</h2>
+                    <div class="tokoh-era">Penentangan Penjajah (Pahang)</div>
+                    <p class="tokoh-desc">Pahlawan gagah berani yang mengetuai siri penentangan terhadap campur tangan British di Pahang dengan taktik perang gerilya yang menggerunkan musuh.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh4')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="pemerintah">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh5.jpg" alt="Parameswara" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Parameswara'">
+                    <span class="tokoh-tag">Pengasas</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Parameswara</h2>
+                    <div class="tokoh-era">Pengasas Melaka (Sekitar 1400)</div>
+                    <p class="tokoh-desc">Putera raja dari Palembang yang bijak memilih lokasi strategik di muara sungai untuk mengasaskan sebuah empayar perdagangan teragung di Asia Tenggara.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh5')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="pemerintah">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh6.jpg" alt="Sultan Alauddin Riayat Shah" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Sultan+Alauddin'">
+                    <span class="tokoh-tag">Sultan</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Sultan Alauddin Riayat Shah</h2>
+                    <div class="tokoh-era">Kesultanan Melayu Melaka (1477–1488)</div>
+                    <p class="tokoh-desc">Sultan yang terkenal dengan sifat tegas and adil. Baginda kerap menyamar menjadi rakyat biasa pada waktu malam untuk menjaga keselamatan Melaka daripada jenayah.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh6')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="pahlawan">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh7.jpg" alt="Tok Janggut" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Tok+Janggut'">
+                    <span class="tokoh-tag">Pejuang</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Tok Janggut (Haji Mohd Hassan)</h2>
+                    <div class="tokoh-era">Penentangan Penjajah (Kelantan)</div>
+                    <p class="tokoh-desc">Tokoh ulama dan pahlawan yang bangkit menentang pengenalan sistem cukai British yang menindas di Pasir Puteh, Kelantan.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh7')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="pahlawan">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh8.jpg" alt="Datuk Bahaman" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Datuk+Bahaman'">
+                    <span class="tokoh-tag">Orang Kaya Semantan</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Datuk Bahaman</h2>
+                    <div class="tokoh-era">Perang Semantan (Pahang)</div>
+                    <p class="tokoh-desc">Panglima Pahang yang mempunyai ilmu mempertahankan diri yang tinggi, terkenal kerana memimpin penentangan bersenjata sengit terhadap British di Semantan.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh8')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="diplomat">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh9.jpg" alt="Tun Sri Lanang" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Tun+Sri+Lanang'">
+                    <span class="tokoh-tag">Bendahara & Pujangga</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Tun Sri Lanang</h2>
+                    <div class="tokoh-era">Kesultanan Johor-Riau</div>
+                    <p class="tokoh-desc">Bendahara Johor yang juga merupakan pengarang agung kitab Sulalatus Salatin (Sejarah Melayu), sebuah karya sastera dan pensejarahan Melayu paling bernilai.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh9')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="pahlawan">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh10.jpg" alt="Rentap" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Rentap'">
+                    <span class="tokoh-tag">Panglima Iban</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Rentap "Agi Idup, Agi Ngaban"</h2>
+                    <div class="tokoh-era">Penentangan James Brooke (Sarawak)</div>
+                    <p class="tokoh-desc">Pemimpin pahlawan Iban yang menggegarkan kubu rejim Brooke di Bukit Sadok demi mempertahankan kedaulatan tanah air dan adat resam tradisi.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh10')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="pahlawan">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh11.jpg" alt="Dol Said" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Dol+Said'">
+                    <span class="tokoh-tag">Penghulu Naning</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Dol Said</h2>
+                    <div class="tokoh-era">Perang Naning (1831–1832)</div>
+                    <p class="tokoh-desc">Pemerintah Naning kesembilan yang berjaya mengumpulkan pakatan tentera Melayu untuk menewaskan tentera British dalam kempen Perang Naning pertama.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh11')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+            <div class="tokoh-card" data-category="pemerintah">
+                <div class="tokoh-img-wrapper">
+                    <img src="tokoh12.jpg" alt="Sultan Abu Bakar" class="tokoh-img" onerror="this.src='https://placehold.co/400x300/1a1a1a/ffffff?text=Sultan+Abu+Bakar'">
+                    <span class="tokoh-tag">Bapa Pemodenan</span>
+                </div>
+                <div class="tokoh-info">
+                    <h2>Sultan Abu Bakar</h2>
+                    <div class="tokoh-era">Kesultanan Johor Moden (1862–1895)</div>
+                    <p class="tokoh-desc">Pemerintah berpandangan jauh yang memodernkan pentadbiran Johor, menggubal Undang-Undang Tubuh Kerajaan Johor, and mengekalkan kemerdekaan negeri daripada British melalui kebijaksanaan diplomasi.</p>
+                    <button class="tokoh-btn" onclick="bukaBiografi('tokoh12')">Baca Biografi Penuh</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay" onclick="tutupBiografi()">
+        <div class="modal-box" id="modalBox" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="tutupBiografi()">&times;</span>
+            <img id="modalImg" class="modal-hero-img" src="" alt="Gambar Tokoh">
+            <div class="modal-body">
+                <h1 id="modalTitle" class="modal-title">Nama Tokoh</h1>
+                <div id="modalEra" class="modal-era">Era Pemerintahan / Perjuangan</div>
+                
+                <div class="modal-section">
+                    <h3>Latar Belakang</h3>
+                    <p id="modalLatar">Isi kandungan latar belakang...</p>
+                </div>
+
+                <div class="modal-section">
+                    <h3>Sumbangan & Peranan Utama</h3>
+                    <p id="modalSumbangan">Isi kandungan sumbangan...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Pangkalan Data Biografi Lengkap untuk 12 Tokoh
+        const dataBiografi = {
+            "tokoh1": {
+                nama: "Sultan Muzaffar Shah",
+                era: "Kesultanan Melayu Melaka (1445–1459)",
+                gambar: "tokoh1.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Sultan+Muzaffar",
+                latar: "Sultan Muzaffar Shah merupakan Sultan Melaka kelima. Baginda menaiki takhta selepas mengetuai rampasan kuasa bagi menyingkirkan pengaruh Raja Kassim (Sultan Abu Syahid) yang dipengaruhi oleh pembesar bukan Melayu. Era baginda dikenali sebagai bermulanya zaman keemasan kedaulatan Melayu.",
+                sumbangan: "Baginda telah mengarahkan pembukuan Hukum Kanun Melaka dan Undang-Undang Laut Melaka bagi memantapkan sistem keadilan. Di bawah strategi pentadbiran baginda bersama Tun Perak, tentera Melaka berjaya menghalang dua siri serangan besar empayar Siam (melalui darat and laut), mengekalkan status Melaka sebagai pelabuhan berdaulat."
+            },
+            "tokoh2": {
+                nama: "Laksamana Hang Tuah",
+                era: "Kesultanan Melayu Melaka",
+                gambar: "tokoh2.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Laksamana+Hang+Tuah",
+                latar: "Hang Tuah dilahirkan di Kampung Sungai Duyung. Sejak remaja, beliau terkenal bersama empat sahabat karibnya (Hang Jebat, Hang Kasturi, Hang Lekir, Hang Lekiu) kerana keberanian menumpaskan sekumpulan lanun dan menyelamatkan Bendahara daripada amukan.",
+                sumbangan: "Dilantik sebagai Laksamana (Ketua Angkatan Laut) Melaka, beliau menjadi pelindung utama jalur perdagangan Selat Melaka. Beliau bukan sahaja pendekar terulung, malah merupakan diplomat berkaliber yang menguasai pelbagai bahasa semasa dihantar mengetuai misi hubungan diplomatik ke China, India, Siam, dan Turki."
+            },
+            "tokoh3": {
+                nama: "Bendahara Tun Perak",
+                era: "Pentadbir Empayar (1456–1498)",
+                gambar: "tokoh3.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Bendahara+Tun+Perak",
+                latar: "Tun Perak memulakan kerjaya pentadbiran sebagai Penghulu Klang sebelum dilantik menjadi Bendahara Melaka. Beliau terkenal dengan kepintaran taktikal yang tinggi semasa membawa seluruh keluarga tentera Klang turun bertahan bagi menaikkan semangat juang menentang Siam.",
+                sumbangan: "Menjadi 'Arkitek Empayar Melaka' yang berkhidmat di bawah empat orang Sultan (Sultan Muzaffar Shah, Sultan Mansur Shah, Sultan Alauddin Riayat Shah, dan Sultan Mahmud Shah). Beliau meluaskan empayar jajahan takluk Melaka merangkumi sebahagian besar Tanah Melayu dan timur Sumatera menerusi gabungan strategi ketenteraan and diplomatik."
+            },
+            "tokoh4": {
+                nama: "Mat Kilau",
+                era: "Penentangan Penjajah (Pahang)",
+                gambar: "tokoh4.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Mat+Kilau",
+                latar: "Mat Kilau dilahirkan di Kampung Kendondong, Jerantut, Pahang. Beliau merupakan anak kepada pejuang terkenal, Imam Rasu (Tok Gajah). Mempunyai asas pendidikan agama yang kukuh serta mendalami ilmu kebatinan dan seni mempertahankan diri persilatan tradisi.",
+                sumbangan: "Mengetuai siri gerakan gerilya menentang pentadbiran British di Pahang antara tahun 1891 hingga 1895. Bersama barisan pejuang lain, beliau melancarkan serangan hendap ke atas kubu-kubu pihak British bagi membantah pengenalan sistem cukai and pencerobohan kuasa mutlak institusi raja tempatan."
+            },
+            "tokoh5": {
+                nama: "Parameswara",
+                era: "Pengasas Melaka (Sekitar 1400)",
+                gambar: "tokoh5.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Parameswara",
+                latar: "Parameswara merupakan seorang putera raja berdarah diraja dari Palembang, Sumatera. Akibat ancaman serangan ketenteraan daripada kerajaan Majapahit, beliau terpaksa melarikan diri ke Temasik (Singapura) and Muar, sebelum menuju ke utara.",
+                sumbangan: "Melihat potensi geografi sebuah perkampungan nelayan, baginda mengasaskan kerajaan Melaka pada sekitar tahun 1400. Baginda membina kestabilan ekonomi awal dengan menyediakan kemudahan pelabuhan yang selamat daripada angin monsun serta menjalinkan hubungan ufti rasmi dengan pihak Dinasti Ming di China."
+            },
+            "tokoh6": {
+                nama: "Sultan Alauddin Riayat Shah",
+                era: "Kesultanan Melayu Melaka (1477–1488)",
+                gambar: "tokoh6.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Sultan+Alauddin",
+                latar: "Baginda merupakan putera kepada Sultan Mansur Shah. Dikenali sebagai seorang pemerintah yang sangat warak, berani, and mempunyai komitmen yang sangat tinggi dalam menegakkan undang-undang Islam syariah tanpa mengira bulu.",
+                sumbangan: "Terkenal dalam lembaran sejarah kerana baginda sering melakukan penyamaran sebagai rakyat biasa pada waktu malam untuk meronda bandar raya Melaka secara peribadi bagi membanteras kegiatan jenayah ragut and rompakan. Tindakan tegas baginda ini berjaya memulihkan keyakinan pedagang asing terhadap sistem keselamatan Melaka."
+            },
+            "tokoh7": {
+                nama: "Tok Janggut (Haji Mohd Hassan)",
+                era: "Penentangan Penjajah (Kelantan)",
+                gambar: "tokoh7.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Tok+Janggut",
+                latar: "Nama sebenar beliau ialah Haji Mohd Hassan bin Munas, dilahirkan di Kampung Jeram, Pasir Puteh, Kelantan. Mendapat jolokan nama 'Tok Janggut' kerana memelihara janggut yang panjang. Merupakan seorang tokoh agama and petani yang sangat dihormati.",
+                sumbangan: "Mengepalai gerakan kebangkitan rakyat menentang jajahan British pada tahun 1915 di Pasir Puteh. Kebangkitan ini dicetuskan oleh keengganan rakyat tempatan membayar cukai hasil bumi and pertanian yang tidak munasabah yang diperkenalkan oleh pihak pentadbiran British Penasihat."
+            },
+            "tokoh8": {
+                nama: "Datuk Bahaman",
+                era: "Perang Semantan (Pahang)",
+                gambar: "tokoh8.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Datuk+Bahaman",
+                latar: "Nama sebenar beliau ialah Abdul Rahman bin Tuanku Imam Nuh. Dianugerahkan gelaran pembesar 'Orang Kaya Dato' Setia Perkasa Pahlawan Semantan' oleh Sultan Pahang ekoran kehebatan and ketangkasan beliau dalam kancah pertempuran.",
+                sumbangan: "Merupakan pemimpin utama Perang Semantan (1891–1895) menentang British. Beliau menentang keras pembinaan balai polis British di Lubuk Terua tanpa izin pembesar, serta bangkit mempertahankan hak tradisi mengutip cukai yang telah dilucutkan secara zalim oleh pihak penjajah."
+            },
+            "tokoh9": {
+                nama: "Tun Sri Lanang",
+                era: "Kesultanan Johor-Riau",
+                gambar: "tokoh9.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Tun+Sri+Lanang",
+                latar: "Nama sebenar beliau ialah Tun Muhammad bin Tun Ahmad. Beliau memegang jawatan eksekutif tertinggi sebagai Bendahara Paduka Raja bagi Kesultanan Johor-Riau pada penghujung abad ke-16. Merupakan tokoh cendekiawan and sejarawan terulung Nusantara.",
+                sumbangan: "Sumbangan intelektual terbesar beliau adalah menyusun and mengarang kitab agung 'Sulalatus Salatin' (Sejarah Melayu) atas perintah rasmi institusi diraja. Karya sastera ini diiktiraf dunia sebagai sumber historiografi paling penting yang merakamkan adat istiadat, salasilah raja-raja, and kegemilangan tamadun Melayu."
+            },
+            "tokoh10": {
+                nama: "Rentap \"Agi Idup, Agi Ngaban\"",
+                era: "Penentangan James Brooke (Sarawak)",
+                gambar: "tokoh10.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Rentap",
+                latar: "Rentap atau nama asalnya Libau merupakan pemimpin agung pahlawan kaum Iban yang menetap di kawasan hulu Sungai Skrang. Nama 'Rentap' membawa maksud 'Penggoncang Dunia' atau 'Ensubar Tanah' dalam bahasa Iban.",
+                sumbangan: "Membawa kebangkitan pahlawan Dayak menentang rejim beraja Rajah Putih James Brooke pada tahun 1853 yang menceroboh wilayah and menghapuskan penempatan tradisi mereka atas tuduhan palsu sebagai lanun. Rentap membina kubu kayu belian yang sangat kukuh di puncak Bukit Sadok and berjaya mematahkan siri serangan Brooke beberapa kali."
+            },
+            "tokoh11": {
+                nama: "Dol Said",
+                era: "Perang Naning (1831–1832)",
+                gambar: "tokoh11.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Dol+Said",
+                latar: "Dilahirkan pada tahun 1773, nama penuh beliau ialah Abdul Said. Beliau dilantik menjadi Penghulu Naning yang kesembilan pada tahun 1799 ketika berusia 26 tahun. Seorang pemimpin berwibawa yang memegang teguh adat resam Perpatih.",
+                sumbangan: "Memimpin gerakan bersenjata Perang Naning menentang Syarikat Hindia Timur Inggeris (SHTI) British. Dol Said bangkit menentang tuntutan hak British yang memaksa wilayah Naning (sebagai sebuah negeri merdeka) membayar ueti tahunan sebanyak satu persepuluh daripada hasil pertanian."
+            },
+            "tokoh12": {
+                nama: "Sultan Abu Bakar",
+                era: "Kesultanan Johor Moden (1862–1895)",
+                gambar: "tokoh12.jpg",
+                fallback: "https://placehold.co/800x400/1a1a1a/ffffff?text=Sultan+Abu+Bakar",
+                latar: "Baginda merupakan putera kepada Temenggong Daeng Ibrahim. Menaiki takhta Johor and kemudiannya memakai gelaran Sultan pada 1885. Mendapat pendedahan sistem pendidikan Barat and Timur menjadikannya seorang raja yang berfikiran global.",
+                sumbangan: "Digelar sebagai 'Bapa Pemodenan Johor' kerana berjaya mereformasikan pentadbiran negeri secara efisien, membina infrastruktur moden, and memperkenalkan Sistem Kangchu bagi memacu ekonomi lada hitam. Sumbangan politik terbesar baginda adalah menggubal Undang-Undang Tubuh Kerajaan Johor (1895), perlembagaan bertulis bertaraf moden pertama di Tanah Melayu."
+            }
+        };
+
+        // Fungsi Filter Kategori Kad
+        function filterTokoh(kategori, event) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            if(event) {
+                event.target.classList.add('active');
+            }
+
+            document.querySelectorAll('.tokoh-card').forEach(card => {
+                if (kategori === 'semua' || card.getAttribute('data-category') === kategori) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Fungsi Buka Pop-up Biografi (Modal)
+        function bukaBiografi(idTokoh) {
+            const data = dataBiografi[idTokoh];
+            if (data) {
+                document.getElementById('modalTitle').innerText = data.nama;
+                document.getElementById('modalEra').innerText = data.era;
+                document.getElementById('modalLatar').innerText = data.latar;
+                document.getElementById('modalSumbangan').innerText = data.sumbangan;
+                
+                const modalImg = document.getElementById('modalImg');
+                modalImg.src = data.gambar;
+                modalImg.onerror = function() {
+                    this.src = data.fallback;
+                };
+
+                document.getElementById('modalOverlay').classList.add('active');
+                document.body.style.overflow = 'hidden'; 
+            }
+        }
+
+        // Fungsi Tutup Pop-up Biografi
+        function tutupBiografi() {
+            document.getElementById('modalOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto'; 
+        }
+
+        // Kesan Animasi Transisi Halaman (Fade Out)
+        document.querySelectorAll('.nav-links a, .back-btn').forEach(link => {
+            link.addEventListener('click', function(e) {
+                let targetUrl = this.getAttribute('href');
+                if (targetUrl && !targetUrl.startsWith('#') && !targetUrl.startsWith('index.html#')) {
+                    e.preventDefault();
+                    document.body.style.opacity = "0";
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 800);
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

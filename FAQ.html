@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Merentas Masa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            /* GANTIKAN 'background.jpg' dengan nama fail gambar anda jika berbeza.
+               linear-gradient di bawah berfungsi sebagai lapisan gelap (overlay) 
+               supaya teks anda tetap jelas, kontras dan mudah dibaca.
+            */
+            background-image: linear-gradient(rgba(11, 11, 11, 0.9), rgba(11, 11, 11, 0.9)), url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Menjadikan background kekal di tempatnya semasa skrol */
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 1s ease;
+            transition: opacity 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- HEADBAR / NAVBAR NAVIGASI --- */
+        .headbar {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; 
+            padding: 0 60px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 1000; 
+            background: rgba(0, 0, 0, 0.6); /* Dipergelapkan sedikit untuk kontras gambar */
+            backdrop-filter: blur(8px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #2b70e4; 
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px; 
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Arial', sans-serif; 
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.85;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        /* --- CONTAINER UTAMA FAQ --- */
+        .faq-container {
+            flex: 1;
+            max-width: 850px;
+            width: 100%;
+            margin: 130px auto 60px auto; /* Margin top tinggi bagi mengelak bertindan dengan headbar */
+            padding: 0 20px;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .faq-header h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 2.8rem;
+            color: #f1c40f; /* Sentuhan warna emas klasik */
+            text-shadow: 0 0 12px rgba(241,196,15,0.3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .faq-header p {
+            font-size: 1.1rem;
+            color: #bdc3c7;
+            font-style: italic;
+        }
+
+        /* BAR CARIAN FAQ */
+        .search-wrapper {
+            position: relative;
+            margin-bottom: 40px;
+            width: 100%;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 16px 20px;
+            background-color: rgba(22, 22, 22, 0.85);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .search-box:focus {
+            border-color: #f1c40f;
+            background-color: rgba(28, 28, 28, 0.95);
+            box-shadow: 0 4px 20px rgba(241, 196, 15, 0.15);
+        }
+
+        /* --- STRUKTUR AKORDION FAQ --- */
+        .faq-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .faq-item {
+            background-color: rgba(22, 22, 22, 0.85); /* Ditambah opacity lutsinar supaya nampak background */
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: border-color 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(241, 196, 15, 0.3);
+        }
+
+        /* Butang Soalan */
+        .faq-question {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 22px 25px;
+            text-align: left;
+            color: #ffffff;
+            font-family: 'Arial', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            transition: color 0.3s;
+        }
+
+        .faq-question:hover {
+            color: #f1c40f;
+        }
+
+        /* Simbol Anak Panah Gasing */
+        .faq-icon {
+            font-size: 1rem;
+            color: #f1c40f;
+            transition: transform 0.4s ease;
+        }
+
+        /* Kotak Panel Jawapan */
+        .faq-answer {
+            max-height: 0; /* Tertutup secara lalai */
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            background-color: rgba(17, 17, 17, 0.7); /* Lutsinar sedikit menggelapkan */
+        }
+
+        .faq-answer-content {
+            padding: 0 25px 25px 25px;
+            font-size: 0.98rem;
+            line-height: 1.6;
+            color: #cccccc;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* APABILA AKORDION AKTIF (DIBUKA) */
+        .faq-item.active .faq-answer {
+            max-height: 300px; /* Nilai selamat yang mencukupi panjang teks */
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg);
+        }
+
+        .faq-item.active .faq-question {
+            color: #f1c40f;
+        }
+
+        /* Hubungi Kami Sg. Kenyataan */
+        .faq-footer-note {
+            text-align: center;
+            margin-top: 50px;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.95rem;
+            color: #888888;
+        }
+
+        .faq-footer-note a {
+            color: #f1c40f;
+            text-decoration: none;
+            border-bottom: 1px dashed #f1c40f;
+        }
+
+        .faq-footer-note a:hover {
+            color: #ffffff;
+            border-bottom-color: #ffffff;
+        }
+
+        /* --- FOOTER HAK CIPTA --- */
+        .main-footer {
+            background-color: rgba(11, 11, 11, 0.9);
+            color: #555555;
+            text-align: center;
+            padding: 25px 20px;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.85rem;
+            border-top: 1px solid #161616;
+            margin-top: auto; /* Memastikan footer melekat di bawah jika kandungan pendek */
+        }
+
+        /* Mesej Tiada Hasil Carian */
+        .no-results {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            color: #888888;
+            font-family: 'Arial', sans-serif;
+            font-style: italic;
+        }
+
+        /* --- RESPONSIVITI --- */
+        @media (max-width: 768px) {
+            .headbar {
+                padding: 0 20px;
+            }
+            .faq-header h1 {
+                font-size: 2.2rem;
+            }
+            .faq-question {
+                font-size: 1rem;
+                padding: 18px 20px;
+            }
+            .faq-answer-content {
+                padding: 0 20px 20px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="headbar" onclick="event.stopPropagation();">
+        <a href="index.html" class="logo">aizwebs<span>i</span>te</a>
+        
+        <div class="nav-links">
+            <a href="index.html">Utama</a>
+            <a href="index.html#about">Tentang Kami</a>
+            <a href="index.html#contact">Hubungi Kami</a>
+            <a href="Help.html">Bantuan</a>
+            <a href="Faq.html" style="opacity: 1; color: #f1c40f;">Soalan Lazim</a>
+        </div>
+    </nav>
+
+    <div class="faq-container">
+        <div class="faq-header">
+            <h1>Soalan Lazim (FAQ)</h1>
+            <p>Mempunyai sebarang pertanyaan? Cari jawapan pantas anda di sini.</p>
+        </div>
+
+        <div class="search-wrapper">
+            <input type="text" id="faqSearch" class="search-box" placeholder="Taip kata kunci untuk mencari soalan... (cth: modul, kuiz, koswer, komuniti)">
+        </div>
+
+        <div class="faq-wrapper" id="faqAccordion">
+            
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Apakah itu portal koswer "Merentas Masa"?</span>
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        "Merentas Masa" merupakan sebuah platform koswer digital berasaskan web interaktif yang dibangunkan khusus untuk menceritakan semula liputan sejarah ketamadunan Melayu merangkumi peristiwa bersejarah, pahlawan silam, arkib lama, dan kuiz interaktif.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Adakah portal ini merupakan projek rasmi universiti?</span>
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Ya. Portal ini merupakan hasil tugasan projek berkumpulan bagi kod subjek <strong>IML513</strong> oleh mahasiswa Fakulti Pengurusan Maklumat, Universiti Teknologi MARA (UiTM) Kampus Puncak Perdana.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Bagaimanakah cara untuk mula membaca nota?</span>
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Anda hanya perlu menekan butang <strong>"Mula Meneroka"</strong> di halaman utama (Utama) untuk masuk ke Menu Utama. Dari situ, anda boleh memilih kad <strong>"Peristiwa Bersejarah"</strong> atau bahagian-bahagian lain yang ingin dibaca.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Adakah saya perlu membayar untuk menduduki kuiz?</span>
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Tidak. Semua pengisian di dalam koswer digital ini termasuk nota, biografi tokoh, akses galeri arkib digital, dan ruangan kuiz minda disediakan secara percuma untuk tujuan pendidikan.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Adakah maklumat sejarah dalam portal ini sahih?</span>
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Sangat sahih. Salah satu nilai teras pegangan kami adalah <strong>Ketepatan Fakta</strong>. Setiap data, baris susur masa, kisah biografi, dan gambar dokumen lama dipetik serta dirujuk daripada rekod dokumentasi sahih institusi arkib dan buku teks sejarah rasmi.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Bagaimanakah sistem fungsi Chatbox AI berfungsi?</span>
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Widget 'AI Chatbox' di penjuru kanan bawah bertindak sebagai asisten maya pintar anda. Anda boleh mengajukan soalan ringkas berkaitan tajuk subjek atau navigasi laman, dan ia akan memberikan respons panduan secara automatik.
+                    </div>
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <button class="faq-question">
+                    <span>Apakah fungsi ruangan Komuniti dalam portal Merentas Masa?</span>
+                    <span class="faq-icon">▼</span>
+                </button>
+                <div class="faq-answer">
+                    <div class="faq-answer-content">
+                        Ruangan <strong>Komuniti</strong> disediakan sebagai platform interaktif untuk para pengguna berkongsi pandangan, membincangkan topik sejarah Melayu, serta berinteraksi dengan pengguna lain bagi memupuk semangat perkongsian ilmu sejarah.
+                    </div>
+                </div>
+            </div>
+
+            <div class="no-results" id="noResults">
+                Maaf, tiada soalan padan dengan kata kunci carian anda. Cuba perkataan lain.
+            </div>
+
+        </div>
+
+        <div class="faq-footer-note">
+            Soalan anda tidak disenaraikan? Sila hantarkan mesej terus melalui borang di bahagian <a href="index.html#contact">Hubungi Kami</a>.
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <p>© 2026 aizwebsite. Hak Cipta Terpelihara.</p>
+    </footer>
+
+    <script>
+        // 1. LOGIK AKORDION (BUKA & TUTUP SOALAN)
+        const faqQuestions = document.querySelectorAll('.faq-question');
+
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', function() {
+                const currentItem = this.parentElement;
+                
+                // Tutup item lain yang sedang terbuka
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (item !== currentItem) {
+                        item.classList.remove('active');
+                    }
+                });
+
+                // Buka/Tutup item yang diklik
+                currentItem.classList.toggle('active');
+            });
+        });
+
+        // 2. LOGIK CARIAN PANTAS (LIVE SEARCH FAQ)
+        const searchInput = document.getElementById('faqSearch');
+        const faqItems = document.querySelectorAll('.faq-item');
+        const noResults = document.getElementById('noResults');
+
+        searchInput.addEventListener('input', function() {
+            const filterValue = this.value.toLowerCase().trim();
+            let hasMatch = false;
+
+            faqItems.forEach(item => {
+                const questionText = item.querySelector('.faq-question span').innerText.toLowerCase();
+                const answerText = item.querySelector('.faq-answer-content').innerText.toLowerCase();
+
+                // Jika kata kunci ada dalam soalan atau jawapan
+                if (questionText.includes(filterValue) || answerText.includes(filterValue)) {
+                    item.style.display = "block";
+                    hasMatch = true;
+                } else {
+                    item.style.display = "none";
+                    item.classList.remove('active'); // Tutup akordion jika tersembunyi
+                }
+            });
+
+            // Papar mesej amaran jika tiada sebarang padanan
+            if (hasMatch) {
+                noResults.style.display = "none";
+            } else {
+                noResults.style.display = "block";
+            }
+        });
+
+        // 3. ANIMASI TRANSISI KELUAR HALAMAN (NAVBAR CLICK)
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!this.getAttribute('href').startsWith('index.html#')) {
+                    e.preventDefault();
+                    let targetUrl = this.getAttribute('href');
+                    document.body.style.opacity = "0";
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 800);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

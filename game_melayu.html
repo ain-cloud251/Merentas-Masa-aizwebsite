@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+
+<html lang="ms">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Zon Aktiviti - Sejarah Melayu</title>
+
+    <style>
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+
+
+        body {
+
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+            background-color: #1a1a1a;
+
+            color: #fff;
+
+            min-height: 100vh;
+
+            padding: 30px;
+
+        }
+
+
+
+        /* --- NAVIGASI ATAS --- */
+
+        .top-nav {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            border-bottom: 2px solid #d4af37;
+
+            padding-bottom: 15px;
+
+            margin-bottom: 30px;
+
+        }
+
+
+
+        .back-btn {
+
+            background-color: #333;
+
+            color: #d4af37;
+
+            padding: 10px 20px;
+
+            text-decoration: none;
+
+            border-radius: 20px;
+
+            font-weight: bold;
+
+            border: 1px solid #d4af37;
+
+            transition: all 0.3s;
+
+        }
+
+
+
+        .back-btn:hover {
+
+            background-color: #d4af37;
+
+            color: #111;
+
+        }
+
+
+
+        h1 {
+
+            color: #fff;
+
+            text-shadow: 0 0 10px rgba(212,175,55,0.2);
+
+        }
+
+
+
+        /* --- PILIHAN GAME (MENU UTAMA AKTIVITI) --- */
+
+        .game-selection {
+
+            display: flex;
+
+            gap: 20px;
+
+            justify-content: center;
+
+            margin-bottom: 40px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+
+        .game-card {
+
+            background-color: #222;
+
+            border: 1px solid #444;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            width: 220px;
+
+            text-align: center;
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+
+        }
+
+
+
+        .game-card:hover, .game-card.active {
+
+            border-color: #d4af37;
+
+            transform: translateY(-5px);
+
+            background-color: #2d2d2d;
+
+            box-shadow: 0 5px 15px rgba(212,175,55,0.2);
+
+        }
+
+
+
+        .game-card .icon {
+
+            font-size: 2.5rem;
+
+            margin-bottom: 10px;
+
+            display: block;
+
+        }
+
+
+
+        .game-card h3 {
+
+            color: #d4af37;
+
+            margin-bottom: 10px;
+
+            font-size: 1.1rem;
+
+        }
+
+
+
+        .game-card p {
+
+            font-size: 0.85rem;
+
+            color: #aaa;
+
+        }
+
+
+
+        /* --- ARAHAN DAN ARENA GAME --- */
+
+        .game-arena {
+
+            background-color: #222;
+
+            border: 1px solid #333;
+
+            border-radius: 15px;
+
+            max-width: 700px;
+
+            margin: 0 auto;
+
+            padding: 40px;
+
+            min-height: 350px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            align-items: center;
+
+        }
+
+
+
+        .game-section {
+
+            display: none;
+
+            width: 100%;
+
+            text-align: center;
+
+        }
+
+
+
+        .game-section.active {
+
+            display: block;
+
+            animation: fadeIn 0.5s ease;
+
+        }
+
+
+
+        @keyframes fadeIn {
+
+            from { opacity: 0; }
+
+            to { opacity: 1; }
+
+        }
+
+
+
+        /* --- GAYA TEMA 1: FLASH CARD --- */
+
+        .flashcard-container {
+
+            width: 300px;
+
+            height: 200px;
+
+            perspective: 1000px;
+
+            margin: 20px auto;
+
+            cursor: pointer;
+
+        }
+
+
+
+        .flashcard {
+
+            width: 100%;
+
+            height: 100%;
+
+            position: relative;
+
+            transform-style: preserve-3d;
+
+            transition: transform 0.6s;
+
+            background-color: #333;
+
+            border-radius: 10px;
+
+            border: 2px solid #d4af37;
+
+        }
+
+
+
+        .flashcard.flipped {
+
+            transform: rotateY(180deg);
+
+        }
+
+
+
+        .card-face {
+
+            position: absolute;
+
+            width: 100%;
+
+            height: 100%;
+
+            backface-visibility: hidden;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 20px;
+
+            font-size: 1.2rem;
+
+            font-weight: bold;
+
+            border-radius: 8px;
+
+        }
+
+
+
+        .card-front {
+
+            background-color: #2c3e50;
+
+            color: #fff;
+
+        }
+
+
+
+        .card-back {
+
+            background-color: #27ae60;
+
+            color: #fff;
+
+            transform: rotateY(180deg);
+
+        }
+
+
+
+        .game-btn {
+
+            background-color: #d4af37;
+
+            color: #111;
+
+            border: none;
+
+            padding: 10px 25px;
+
+            font-weight: bold;
+
+            border-radius: 5px;
+
+            cursor: pointer;
+
+            margin-top: 15px;
+
+            transition: background 0.2s;
+
+        }
+
+
+
+        .game-btn:hover {
+
+            background-color: #f1c40f;
+
+        }
+
+
+
+        /* --- GAYA TEMA 2: SIMPLE QUIZ --- */
+
+        .quiz-option {
+
+            background-color: #333;
+
+            border: 1px solid #505050;
+
+            padding: 12px;
+
+            margin: 10px 0;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+
+            text-align: left;
+
+            transition: background 0.2s;
+
+        }
+
+
+
+        .quiz-option:hover {
+
+            background-color: #444;
+
+            border-color: #d4af37;
+
+        }
+
+
+
+        /* --- GAYA TEMA 3: TEKA SILANG KATA --- */
+
+        .crossword-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(5, 40px);
+
+            gap: 5px;
+
+            justify-content: center;
+
+            margin: 20px 0;
+
+        }
+
+
+
+        .crossword-cell {
+
+            width: 40px;
+
+            height: 40px;
+
+            background-color: #333;
+
+            border: 1px solid #d4af37;
+
+            color: white;
+
+            text-align: center;
+
+            font-size: 1.2rem;
+
+            font-weight: bold;
+
+            text-transform: uppercase;
+
+            border-radius: 4px;
+
+        }
+
+
+
+        .crossword-cell:disabled {
+
+            background-color: #111;
+
+            border: none;
+
+        }
+
+
+
+        .clue-box {
+
+            background-color: #111;
+
+            padding: 10px;
+
+            border-radius: 5px;
+
+            margin-bottom: 15px;
+
+            font-style: italic;
+
+            color: #d4af37;
+
+        }
+
+
+
+        /* --- GAYA TEMA 4: MEMORY MATCH GAME (BARU) --- */
+
+        .memory-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 12px;
+
+            max-width: 500px;
+
+            margin: 20px auto;
+
+            perspective: 1000px;
+
+        }
+
+
+
+        .memory-card {
+
+            height: 100px;
+
+            position: relative;
+
+            transform-style: preserve-3d;
+
+            transition: transform 0.5s;
+
+            cursor: pointer;
+
+        }
+
+
+
+        .memory-card.flipped {
+
+            transform: rotateY(180deg);
+
+        }
+
+
+
+        .memory-face {
+
+            position: absolute;
+
+            width: 100%;
+
+            height: 100%;
+
+            backface-visibility: hidden;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            border-radius: 8px;
+
+            padding: 8px;
+
+            font-size: 0.9rem;
+
+            font-weight: bold;
+
+            text-align: center;
+
+        }
+
+
+
+        .memory-front {
+
+            background-color: #333;
+
+            border: 2px solid #d4af37;
+
+            color: #d4af37;
+
+            font-size: 1.8rem;
+
+        }
+
+
+
+        .memory-back {
+
+            background-color: #2c3e50;
+
+            color: #fff;
+
+            transform: rotateY(180deg);
+
+            border: 2px solid #34495e;
+
+        }
+
+
+
+        .memory-card.matched .memory-back {
+
+            background-color: #27ae60;
+
+            border-color: #2ecc71;
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <div class="top-nav">
+
+        <a href="melayu_nota.html" class="back-btn">◀ Kembali Ke Nota</a>
+
+        <h1>Zon Aktiviti Sejarah Melayu</h1>
+
+        <div style="width: 120px;"></div> 
+
+    </div>
+
+
+
+    <div class="game-selection">
+
+        <div class="game-card active" onclick="switchGame('flashcard', this)">
+
+            <span class="icon">🎴</span>
+
+            <h3>1. Flash Card</h3>
+
+            <p>Imbas dan hafal fakta pahlawan Melayu.</p>
+
+        </div>
+
+        <div class="game-card" onclick="switchGame('quiz', this)">
+
+            <span class="icon">📝</span>
+
+            <h3>2. Simple Quiz</h3>
+
+            <p>Uji kefahaman aneka pilihan.</p>
+
+        </div>
+
+        <div class="game-card" onclick="switchGame('crossword', this)">
+
+            <span class="icon">🧩</span>
+
+            <h3>3. Silang Kata</h3>
+
+            <p>Isi kotak kosong perkataan rahsia.</p>
+
+        </div>
+
+        <div class="game-card" onclick="switchGame('memory', this)">
+
+            <span class="icon">🃏</span>
+
+            <h3>4. Padanan Memori</h3>
+
+            <p>Padankan watak sejarah dengan gelaran tepat.</p>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="game-arena">
+
+
+
+        <div id="game-flashcard" class="game-section active">
+
+            <h2>Kad Imbasan Tokoh</h2>
+
+            <p style="color: #aaa; margin-bottom: 15px;">Klik pada kad di bawah untuk pusingkan fail fakta!</p>
+
+            
+
+            <div class="flashcard-container" onclick="toggleCard()">
+
+                <div class="flashcard" id="myCard">
+
+                    <div class="card-face card-front">
+
+                        Siapakah pengasas Kesultanan Melayu Melaka?
+
+                    </div>
+
+                    <div class="card-face card-back">
+
+                        Parameswara (Tahun 1400)
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <p style="font-size: 0.9rem; color: #888;">*Sesuai untuk ulangkaji pantas sebelum kuiz.</p>
+
+        </div>
+
+
+
+        <div id="game-quiz" class="game-section">
+
+            <h2>Kuiz Aneka Pilihan</h2>
+
+            <div id="quiz-box" style="margin-top: 20px;">
+
+                <p id="quiz-question" style="font-size: 1.2rem; margin-bottom: 15px; font-weight: bold;">Apakah punca kejatuhan Melaka pada tahun 1511?</p>
+
+                <div class="quiz-option" onclick="checkQuizAnswer(false)">A) Kekurangan bekalan makanan pelabuhan</div>
+
+                <div class="quiz-option" onclick="checkQuizAnswer(true)">B) Serangan Portugis & Kelemahan Dalaman</div>
+
+                <div class="quiz-option" onclick="checkQuizAnswer(false)">C) Bencana alam taufan laut</div>
+
+            </div>
+
+            <div id="quiz-result" style="margin-top: 15px; font-weight: bold;"></div>
+
+        </div>
+
+
+
+        <div id="game-crossword" class="game-section">
+
+            <h2>Mini Silang Kata</h2>
+
+            <p style="color: #aaa; margin-bottom: 10px;">Isikan nama senjata tradisional Melayu terkenal (5 Huruf):</p>
+
+            <div class="clue-box">Bayangan Petunjuk: Senjata pahlawan Hang Tuah</div>
+
+            
+
+            <div class="crossword-grid">
+
+                <input type="text" maxlength="1" class="crossword-cell" id="c1" placeholder="K">
+
+                <input type="text" maxlength="1" class="crossword-cell" id="c2">
+
+                <input type="text" maxlength="1" class="crossword-cell" id="c3">
+
+                <input type="text" maxlength="1" class="crossword-cell" id="c4">
+
+                <input type="text" maxlength="1" class="crossword-cell" id="c5">
+
+            </div>
+
+
+
+            <button class="game-btn" onclick="checkCrossword()">Semak Jawapan</button>
+
+            <div id="crossword-result" style="margin-top: 15px; font-weight: bold;"></div>
+
+        </div>
+
+
+
+        <div id="game-memory" class="game-section">
+
+            <h2>Permainan Padanan Memori Tokoh</h2>
+
+            <p style="color: #aaa; margin-bottom: 15px;">Cari pasangan yang betul antara **Nama Tokoh** dan **Gelaran/Sumbangan** mereka!</p>
+
+            
+
+            <div class="memory-grid" id="memory-board">
+
+                </div>
+
+
+
+            <button class="game-btn" onclick="resetMemoryGame()">Main Semula</button>
+
+            <div id="memory-result" style="margin-top: 15px; font-weight: bold; color: #2ecc71;"></div>
+
+        </div>
+
+
+
+    </div>
+
+
+
+    <script>
+
+        function switchGame(gameType, cardElement) {
+
+            document.querySelectorAll('.game-section').forEach(sec => sec.classList.remove('active'));
+
+            document.querySelectorAll('.game-card').forEach(card => card.classList.remove('active'));
+
+
+
+            document.getElementById('game-' + gameType).classList.add('active');
+
+            cardElement.classList.add('active');
+
+
+
+            // Inisialisasi game memori sekiranya tab memori diklik
+
+            if(gameType === 'memory') {
+
+                resetMemoryGame();
+
+            }
+
+        }
+
+
+
+        function toggleCard() {
+
+            document.getElementById('myCard').classList.toggle('flipped');
+
+        }
+
+
+
+        function checkQuizAnswer(isCorrect) {
+
+            const resultDiv = document.getElementById('quiz-result');
+
+            if(isCorrect) {
+
+                resultDiv.innerHTML = "🎉 TEPAT SEKALI! Jawapan anda betul.";
+
+                resultDiv.style.color = "#2ecc71";
+
+            } else {
+
+                resultDiv.innerHTML = "❌ SALAH! Sila cuba lagi atau baca nota semula.";
+
+                resultDiv.style.color = "#e74c3c";
+
+            }
+
+        }
+
+
+
+        function checkCrossword() {
+
+            const ans2 = document.getElementById('c2').value.toUpperCase();
+
+            const ans3 = document.getElementById('c3').value.toUpperCase();
+
+            const ans4 = document.getElementById('c4').value.toUpperCase();
+
+            const ans5 = document.getElementById('c5').value.toUpperCase();
+
+            const resultDiv = document.getElementById('crossword-result');
+
+
+
+            if(ans2 === 'E' && ans3 === 'R' && ans4 === 'I' && ans5 === 'S') {
+
+                resultDiv.innerHTML = "🏆 SYABAS! Anda berjaya melengkapkan perkataan K-E-R-I-S!";
+
+                resultDiv.style.color = "#2ecc71";
+
+            } else {
+
+                resultDiv.innerHTML = "❌ Huruf tidak tepat. Sila cuba lagi!";
+
+                resultDiv.style.color = "#e74c3c";
+
+            }
+
+        }
+
+
+
+        /* --- LOGIK UTAMA GAME PADANAN MEMORI --- */
+
+        // Definisi data pasangan (id yang sama bermaksud mereka adalah pasangan sepadan)
+
+        const memoryData = [
+
+            { id: 1, text: "Hang Tuah" },
+
+            { id: 1, text: "Laksamana Melaka Agung" },
+
+            { id: 2, text: "Tun Perak" },
+
+            { id: 2, text: "Bendahara Melaka Paling Berpengaruh" },
+
+            { id: 3, text: "Parameswara" },
+
+            { id: 3, text: "Pengasasan Kerajaan Melaka" }
+
+        ];
+
+
+
+        let firstCard = null;
+
+        let secondCard = null;
+
+        let lockBoard = false;
+
+        let matchesFound = 0;
+
+
+
+        function shuffle(array) {
+
+            return array.sort(() => Math.random() - 0.5);
+
+        }
+
+
+
+        function createMemoryBoard() {
+
+            const board = document.getElementById('memory-board');
+
+            board.innerHTML = "";
+
+            const shuffledData = shuffle([...memoryData]);
+
+
+
+            shuffledData.forEach(item => {
+
+                const card = document.createElement('div');
+
+                card.classList.add('memory-card');
+
+                card.dataset.id = item.id;
+
+
+
+                card.innerHTML = `
+
+                    <div class="memory-face memory-front">👑</div>
+
+                    <div class="memory-face memory-back">${item.text}</div>
+
+                `;
+
+
+
+                card.addEventListener('click', flipMemoryCard);
+
+                board.appendChild(card);
+
+            });
+
+        }
+
+
+
+        function flipMemoryCard() {
+
+            if (lockBoard) return;
+
+            if (this === firstCard) return;
+
+
+
+            this.classList.add('flipped');
+
+
+
+            if (!firstCard) {
+
+                firstCard = this;
+
+                return;
+
+            }
+
+
+
+            secondCard = this;
+
+            checkMatch();
+
+        }
+
+
+
+        function checkMatch() {
+
+            let isMatch = firstCard.dataset.id === secondCard.dataset.id;
+
+            isMatch ? disableCards() : unflipCards();
+
+        }
+
+
+
+        function disableCards() {
+
+            firstCard.classList.add('matched');
+
+            secondCard.classList.add('matched');
+
+            
+
+            matchesFound++;
+
+            if(matchesFound === memoryData.length / 2) {
+
+                document.getElementById('memory-result').innerHTML = "🏆 TAHNIAH! Anda berjaya memadankan semua tokoh sejarah!";
+
+            }
+
+
+
+            resetBoard();
+
+        }
+
+
+
+        function unflipCards() {
+
+            lockBoard = true;
+
+            setTimeout(() => {
+
+                firstCard.classList.remove('flipped');
+
+                secondCard.classList.remove('flipped');
+
+                resetBoard();
+
+            }, 1200);
+
+        }
+
+
+
+        function resetBoard() {
+
+            [firstCard, secondCard] = [null, null];
+
+            lockBoard = false;
+
+        }
+
+
+
+        function resetMemoryGame() {
+
+            matchesFound = 0;
+
+            document.getElementById('memory-result').innerHTML = "";
+
+            createMemoryBoard();
+
+        }
+
+    </script>
+
+
+
+</body>
+
+</html> 

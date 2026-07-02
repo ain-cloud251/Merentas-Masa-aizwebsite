@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sejarah Malaysia - Nota Interaktif</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* GANTIKAN 'background.jpg' dengan nama fail gambar anda.
+               linear-gradient di bawah berfungsi sebagai lapisan gelap (overlay) 
+               supaya teks anda tetap jelas dan mudah dibaca.
+            */
+            background-image: linear-gradient(rgba(26, 26, 26, 0.9), rgba(26, 26, 26, 0.9)), url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #e0e0e0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- HEADBAR / NAVIGATION BAR --- */
+        .headbar {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; 
+            padding: 0 60px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 1000; 
+            background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(10px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Gabungan butang back di bahagian kiri */
+        .left-nav-group {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Gaya khas untuk butang Back */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateX(-3px);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px; 
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.85;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            opacity: 1;
+            color: #ffffff;
+        }
+
+        /* --- KANDUNGAN UTAMA --- */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            max-width: 1000px;
+            width: 100%;
+            margin: 120px auto 0 auto; 
+        }
+
+        .header-zone {
+            border-bottom: 1px solid #333;
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #fff;
+            font-size: 2.4rem;
+        }
+
+        /* --- STRUKTUR GARIS MASA (TIMELINE) INTERAKTIF --- */
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 4px;
+            background-color: #333;
+            top: 0;
+            bottom: 0;
+            left: 7px;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.6s forwards ease;
+        }
+
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .timeline-badge {
+            position: absolute;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background-color: #d4af37;
+            left: -30px;
+            top: 15px;
+            z-index: 2;
+            box-shadow: 0 0 10px #d4af37;
+        }
+
+        .timeline-panel {
+            background-color: rgba(34, 34, 34, 0.9);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            backdrop-filter: blur(5px);
+            transition: border-color 0.3s;
+        }
+
+        .timeline-panel:hover {
+            border-color: #d4af37;
+        }
+
+        details {
+            width: 100%;
+        }
+
+        summary {
+            list-style: none;
+            cursor: pointer;
+            outline: none;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .summary-header {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .time-tag {
+            background-color: #d4af37;
+            color: #111;
+            padding: 3px 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 10px;
+            align-self: flex-start;
+        }
+
+        .event-title {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #fff;
+            font-size: 1.4rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: color 0.2s;
+        }
+
+        summary:hover .event-title {
+            color: #d4af37;
+        }
+
+        .event-title::after {
+            content: '➕';
+            font-size: 1rem;
+        }
+
+        details[open] summary .event-title::after {
+            content: '➖';
+        }
+
+        .details-content {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #333;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .details-content p {
+            color: #aaa;
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        /* Gaya khusus untuk butang YouTube */
+        .youtube-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #e74c3c;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 5px;
+            border: none;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            cursor: pointer;
+        }
+
+        .youtube-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* --- AI CHATBOX TERAPUNG DI BELAH TEPI BAWAH --- */
+        .ai-chat-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 99;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+        }
+
+        .ai-chat-box {
+            width: 350px;
+            height: 480px;
+            background-color: #111;
+            border: 2px solid #8e44ad;
+            border-radius: 12px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            animation: popIn 0.3s ease-out forwards;
+        }
+
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.9) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .chat-header {
+            background-color: #8e44ad;
+            color: #fff;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close-chat-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chat-msg {
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            max-width: 85%;
+        }
+
+        .chat-msg.ai {
+            background-color: #222;
+            color: #e0e0e0;
+            border-left: 3px solid #8e44ad;
+            align-self: flex-start;
+        }
+
+        .chat-msg.user {
+            background-color: #8e44ad;
+            color: #fff;
+            align-self: flex-end;
+        }
+
+        .chat-input-area {
+            padding: 12px;
+            border-top: 1px solid #222;
+            display: flex;
+            gap: 8px;
+            background-color: #151515;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            background-color: #222;
+            border: 1px solid #444;
+            color: #fff;
+            padding: 10px;
+            border-radius: 6px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .chat-input-area input:focus {
+            border-color: #8e44ad;
+        }
+
+        .chat-send-btn {
+            background-color: #8e44ad;
+            color: #fff;
+            border: none;
+            padding: 0 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .chat-send-btn:hover {
+            background-color: #7d3c98;
+        }
+
+        .ai-toggle-trigger {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #8e44ad;
+            color: white;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(142, 68, 173, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .ai-toggle-trigger:hover {
+            transform: scale(1.1);
+            background-color: #7d3c98;
+        }
+
+        /* --- MODAL WINDOW BOX --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000; 
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #222;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            border: 1px solid #d4af37;
+        }
+
+        .modal-content h2 {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            color: #d4af37;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p, .modal-content li {
+            color: #ccc;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .close-modal {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+        }
+
+        /* Responsiviti untuk Navbar */
+        @media (max-width: 768px) {
+            .headbar {
+                padding: 0 20px;
+            }
+            .back-btn {
+                padding: 6px 10px;
+                font-size: 0.8rem;
+            }
+            .nav-links {
+                gap: 15px;
+            }
+            .nav-links a {
+                font-size: 0.85rem;
+            }
+            .main-content {
+                margin-top: 100px;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="headbar" onclick="event.stopPropagation();">
+        <div class="left-nav-group">
+            <a href="menu.html" class="back-btn">◀ Kembali</a>
+        </div>
+        
+        <ul class="nav-links">
+            <li><a href="menu.html">Utama</a></li>
+            <li><a href="#">Mengenai Kami</a></li>
+            <li><a href="#">Hubungi Kami</a></li>
+            <li><a href="#" onclick="openModal('help')">Bantuan</a></li>
+            <li><a href="#" onclick="openModal('faq')">Soalan Lazim</a></li>
+        </ul>
+    </nav>
+
+   <div class="main-content">
+        <div class="header-zone">
+            <h1>Garis Masa Sejarah Malaysia</h1>
+            <p style="color: #888; font-style: italic; margin-top: 5px;">Klik pada tajuk peristiwa sejarah untuk membuka maklumat penuh dan pautan video YouTube.</p>
+        </div>
+
+        <div class="timeline">
+            
+            <div class="timeline-item" style="animation-delay: 0.1s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Zaman Prasejarah</span>
+                                <div class="event-title">Zaman Prasejarah di Tanah Melayu</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Perkembangan awal tamadun manusia di Semenanjung Tanah Melayu serta Sabah dan Sarawak merangkumi empat tahap utama, iaitu Paleolitik, Mesolitik (Hoabinhian), Neolitik, dan Zaman Logam. Bukti Arkeologi yang ditemui di Lembah Lenggong, Perak—terutamanya penemuan rangka "Perak Man" yang berusia sekitar 10,000 hingga 11,000 tahun—membuktikan bahawa wilayah ini telah didiami oleh komuniti manusia awal yang sistematik. Evolusi cara hidup dikesan daripada budaya nomad yang bergantung kepada aktiviti memburu dan memungut hasil hutan, sehinggalah kepada pembentukan masyarakat Neolitik and Logam yang mula menetap, menjalankan aktiviti pertanian, menternak binatang, mencipta peralatan tembikar, serta menjalankan perdagangan tukar barang (sistem barter).</p>
+                            <a href="https://youtu.be/v_DStCZS7nk?si=J2BxmnxyEzqe0uKnr1" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 0.2s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Abad ke-5 - ke-14</span>
+                                <div class="event-title">Kemunculan Kerajaan Kedah Tua</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Kerajaan Kedah Tua, yang dikenali dalam catatan luar sebagai Kataha, Kadaram, atau Cheh-Cha, muncul sebagai salah sebuah kerajaan awal yang paling dinamik dan bertahan lama di Nusantara. Berpusat di kawasan Lembah Bujang, kerajaan ini berkembang pesat sebagai emporium perdagangan maritim antarabangsa yang menghubungkan laluan perdagangan antara benua India, China, and tamadun Arab-Parsi. Kemasyhuran Kedah Tua disokong by kedudukan geografi Gunung Jerai yang bertindak sebagai panduan pelayaran, serta kekayaan sumber alam tempatan seperti bijih besi. Penemuan ratusan tapak arkeologi yang merangkumi runtuhan candi (struktur keagamaan Hindu-Buddha), pangkalan pelabuhan purba, and tapak peleburan besi membuktikan betapa tingginya pencapaian sains, sosioekonomi, and pengaruh budaya luar sebelum era kedatangan Islam.</p>
+                            <a href="https://youtu.be/_i3UJplIBYI?si=SwkRqQP5nqD_puQ2" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 0.3s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Tahun 1400</span>
+                                <div class="event-title">Penubuhan Kesultanan Melayu Melaka</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Kesultanan Melayu Melaka diasaskan sekitar tahun 1400 oleh Parameswara, seorang putera raja dari Palembang yang terpaksa melarikan diri ekoran konflik politik geopolitik Majapahit and Siam. Melalui kebijaksanaan kepimpinan beliau, sebuah perkampungan nelayan kecil di muara Sungai Melaka telah diubah menjadi sebuah empayar metropolitan yang agung. Melaka mempunyai kelebihan geografi yang unik kerana terletak di laluan paling sempit di Selat Melaka yang terlindung daripada tiupan angin Monsun Timur Laut and Monsun Barat Daya. Pelabuhannya dilengkapi dengan kemudahan logistik yang canggih, undang-undang laut yang tegas (Undang-Undang Laut Melaka), serta pengenalan jawatan Syahbandar bagi menguruskan kemasukan ribuan pedagang asing, sekali gua mengangkat martabat Melaka sebagai "The Venice of the East."</p>
+                            <a href="https://youtu.be/9Ms5Y6rOtTI?si=Wfrwpv7lgHW46cd7" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 0.4s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Abad ke-15</span>
+                                <div class="event-title">Penyebaran Agama Islam di Tanah Melayu</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Kemasukan and penyebaran agama Islam di Tanah Melayu mencapai fasa kemuncak melalui peranan empayar Kesultanan Melayu Melaka, terutamanya selepas peristiwa pengislaman pemerintahnya, Megat Iskandar Shah pada awal abad ke-15. Melaka berfungsi sebagai pangkalan dakwah antarabangsa mutlak di mana para ulama, pendakwah, and sufi dari rantau Arab, Parsi, and India berkumpul sebelum menyebarkan Islam ke seluruh pelosok Kepulauan Melayu. Proses asimilasi ini berlaku secara aman and komprehensif menerusi aktiviti perdagangan, perkahwinan siasat antara kerabat diraja, serta penaklukan wilayah. Kehadiran Islam membawa anjakan paradigma yang radikal; ia bukan sahaja mengubah pegangan teologi masyarakat, malah mentransformasikan sistem pentadbiran berteraskan syariat, memartabatkan sistem tulisan Jawi, serta melahirkan identiti budaya berteraskan Melayu-Islam.</p>
+                            <a href="https://youtu.be/0UphvIvj020?si=UahWKgZyxsW8UNik" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 0.5s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Tahun 1641</span>
+                                <div class="event-title">Penaklukan Melaka oleh Belanda</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Setelah merentasi fasa ketegangan geopolitik yang panjang, Syarikat Hindia Timur Belanda (VOC) berjaya menamatkan penguasaan 130 tahun kuasa kolonial Portugis di Melaka pada Januari 1641. Kejayaan ketenteraan ini dicapai melalui pakatan strategik and bantuan ketenteraan berskala besar daripada Kesultanan Johor yang dipimpin oleh Sultan Abdul Jalil Shah II. Siasat pengepungan sengit selama hampir enam bulan telah melumpuhkan pertahanan Kota A Famosa. Walaupun Belanda berjaya menduduki Melaka, matlamat utama VOC bukanlah untuk membangunkan ekonomi Melaka sebagai pelabuhan utama, sebaliknya adalah untuk melemahkan pengaruh pesaing barat and memindahkan monopoli perdagangan rempah ratus ke pusat pentadbiran utama mereka di Batavia (Jakarta), Indonesia.</p>
+                            <a href="https://youtu.be/f3eSAxITq-w?si=J504fc5_G1W7QSLy" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 0.6s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Tahun 1819</span>
+                                <div class="event-title">Pembukaan Singapura oleh Stamford Raffles</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Pada Februari 1819, Sir Stamford Raffles, seorang ejen and wakil daripada Syarikat Hindia Timur Inggeris (SHTI), telah membuka sebuah pangkalan and petempatan perdagangan baharu di pulau Singapura. Langkah politik yang agresif ini dilakukan bagi memecah monopoli perdagangan serta sekatan maritim yang dikenakan oleh pihak Belanda di sekitar Selat Melaka and Kepulauan Riau. Raffles mengeksploitasi krisis dalaman domestik yang berlaku dalam institusi Kesultanan Johor-Riau dengan memihak and mengiktiraf Tunku Hussein sebagai Sultan Johor yang sah, bagi menggantikan Sultan Abdul Rahman yang berada di bawah pengaruh kuat Belanda. Perjanjian manipulasi politik ini membolehkan British menduduki Singapura secara rasmi, yang kemudiannya pantas berkembang sebagai pelabuhan bebas termaju di rantau ini.</p>
+                            <a href="https://youtu.be/h-LOmCT5ybQ?si=1ySG1CqeEtRbwg0D" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 0.7s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Tahun 1824</span>
+                                <div class="event-title">Perjanjian Inggeris-Belanda 1824</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Perjanjian Inggeris-Belanda 1824, yang turut dikenali sebagai Perjanjian London, ditandatangani pada 17 Mac 1824 bertujuan menyelesaikan konflik pertikaian wilayah, perdagangan, and geopolitik antara dua kuasa besar barat di Asia Tenggara. Melalui syarat perjanjian ini, berlaku pembahagian geografi pengaruh kolonial secara rasmi: kawasan di utara Selat Melaka (termasuk Semenanjung Tanah Melayu and Singapura) diserahkan di bawah pengaruh British, manakala seluruh kawasan di selatan Selat Melaka (merangkumi Kepulauan Hindia Timur/Indonesia) diletakkan di bawah penguasaan Belanda. Impak paling parah daripada perjanjian ini ialah keretakan kekal empayar Kesultanan Johor-Riau-Lingga yang terpisah menjadi dua entiti politik berbeza, serta penetapan garis sempadan geopolitik moden yang masih memberi kesan sehingga hari ini.</p>
+                            <a href="https://youtu.be/_IMBgWst5SA?si=OvfKr6Ge38tp_8Hq" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 0.8s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Tahun 1826</span>
+                                <div class="event-title">Penubuhan Negeri-Negeri Selat</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Bagi memaksimumkan kecekapan tadbir urus and mengurangkan kos operasi, Syarikat Hindia Timur Inggeris (SHTI) bertindak menggabungkan tiga wilayah jajahan strategik mereka sepanjang Selat Melaka—iaitu Pulau Pinang (diperoleh 1786), Melaka (diperoleh melalui Perjanjian Inggeris-Belanda 1824), and Singapura (diperoleh 1819)—di bawah satu unit pentadbiran tunggal yang dinamakan Negeri-Negeri Selat (NNS). Sistem pentadbiran berpusat ini diketuai oleh seorang Gabenor, dengan Pulau Pinang dipilih sebagai ibu kota yang pertama sebelum peranannya dipindahkan ke Singapura pada tahun 1832 ekoran kedudukan ekonominya yang lebih pesat. Pembentukan NNS ini membolehkan British mengukuhkan penguasaan mutlak ke atas laluan perdagangan maritim utama Timur-Barat serta menyediakan batu loncatan yang kukuh untuk campur tangan dalam hal ehwal politik negeri-negeri Melayu di pedalaman.</p>
+                            <a href="https://youtu.be/8MlmxWVVibA?si=Hy54au63vhLUIGan" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 0.9s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Tahun 1874</span>
+                                <div class="event-title">Perjanjian Pangkor 1874</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Ditandatangani pada 20 Januari 1874 di atas kapal perang British HMS Pluto, Perjanjian Pangkor merupakan titik tolak yang mengubah dasar luar British daripada tidak campur tangan kepada penguasaan politik secara langsung di Tanah Melayu. Sir Andrew Clarke, Gabenor Negeri-Negeri Selat, telah mengambil kesempatan atas krisis perang saudara perebutan takhta Kesultanan Perak antara Raja Abdullah and Raja Ismail, serta konflik pergaduhan kongsi gelap Cina (Perang Larut) yang menjejaskan bekalan bijih timah global. Menerusi perjanjian ini, British mengiktiraf Raja Abdullah sebagai Sultan Perak, namun sebagai balasan, baginda terpaksa menerima pelantikan seorang Residen British (J.W.W. Birch). Nasihat Residen wajib diterima dalam semua urusan pentadbiran negeri kecuali hal ehwal agama Islam and adat istiadat Melayu, sekali gus memperkenalkan "Sistem Residen" yang melucutkan kuasa eksekutif raja-raja and pembesar Melayu.</p>
+                            <a href="https://youtu.be/lOLMefQQOFI?si=Bx9eXBHJHr4f_kDm" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 1.0s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Tahun 1896</span>
+                                <div class="event-title">Pembentukan Negeri-Negeri Melayu Bersekutu</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Selepas kejayaan pelaksanaan Sistem Residen di beberapa buah negeri, pihak British bertindak menyatukan empat buah negeri Melayu yang kaya dengan sumber hasil bumi, iaitu Perak, Selangor, Negeri Sembilan, and Pahang menjadi sebuah entiti persekutuan yang dikenali sebagai Negeri-Negeri Melayu Bersekutu (NNMB) atau *Federated Malay States* pada 1 Julai 1896. Pembentukan ini dilakukan atas dasar keperluan mewujudkan keseragaman sistem perundangan, kecekapan kutipan cukai, pertahanan bersama, serta mempercepatkan pembangunan infrastruktur pengangkutan seperti jalan raya and kereta api. Ditadbir di bawah kawalan mutlak seorang Residen Jeneral yang berpusat di ibu kota Kuala Lumpur, penggabungan ini secara tidak langsung memusatkan seluruh kuasa politik ke tangan birokrasi British and semakin meminggirkan kedudukan serta autoriti mutlak institusi Raja-raja Melayu dalam sistem pemerintahan negeri mereka sendiri.</p>
+                            <a href="https://youtu.be/3CNT_lSWv70?si=Ok39C2jTx3K7gd_Z" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 1.1s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">Tahun 1915</span>
+                                <div class="event-title">Penentangan Tok Janggut</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Gerakan kebangkitan rakyat yang meletus di Pasir Puteh, Kelantan pada tahun 1915 dipimpin oleh Haji Mohd Hassan bin Munas, atau lebih dikenali sebagai Tok Janggut. Penentangan bersenjata ini berakar umbi daripada rasa ketidakpuasan hati yang mendalam terhadap campur tangan birokrasi British ekoran Perjanjian Bangkok 1909. Pihak British melalui Penasihat British telah memperkenalkan sistem pentadbiran tanah yang asing serta mengenakan pelbagai jenis cukai baharu yang membebankan rakyat jelata, seperti cukai hasil tanaman and pokok kelapa. Selain isu ekonomi, kebangkitan ini turut didorong oleh sentimen mempertahankan kedaulatan tanah air and pengaruh luar seperti seruan jihad Empayar Turki Uthmaniyyah semasa Perang Dunia Pertama. Walaupun gerakan ini berjaya ditumpaskan secara agresif oleh pasukan tentera British (negeri Selat) and Tok Janggut gugur syahid, peristiwa ini kekal menjadi simbol keberanian and kemuncak manifestasi nasionalisme awal masyarakat Melayu menentang penjajahan.</p>
+                            <a href="https://youtu.be/qxmJH-ToY8w?si=pS2eVresSx5hplg0" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+            <div class="timeline-item" style="animation-delay: 1.2s;">
+                <div class="timeline-badge"></div>
+                <div class="timeline-panel">
+                    <details>
+                        <summary>
+                            <div class="summary-header">
+                                <span class="time-tag">13 Mei 1969</span>
+                                <div class="event-title">Peristiwa 13 Mei / Rusuhan Kaum</div>
+                            </div>
+                        </summary>
+                        <div class="details-content">
+                            <p>Tragedi berdarah 13 Mei 1969 merupakan titik hitam yang paling kritikal dalam sejarah hubungan etnik di Malaysia. Rusuhan kaum yang berlaku di beberapa kawasan sekitar Kuala Lumpur ini meletus sejurus selepas pengumuman keputusan Pilihan Raya Umum Ketiga, di mana parti pemerintah mengalami kemerosotan kerusi yang signifikan sementara parti pembangkang mengadakan perarakan kemenangan yang mencetuskan ketegangan emosi and provokasi politik. Konflik ini berakar umbi daripada masalah struktur sosioekonomi yang tidak seimbang peninggalan dasar pecah and perintah kolonial British, yang memisahkan penguasaan ekonomi mengikut garis kaum. Bagi mengawal keadaan daripada terus meruncing, sistem Parlimen digantung serta-merta, perintah berkurung dikuatkuasaan, and Majlis Gerakan Negara (MAGERAN) ditubuhkan di bawah pimpinan Tun Abdul Razak untuk memulihkan kestabilan. Sebagai pelan pemulihan jangka panjang bagi membina integrasi nasional, kerajaan bertindak memperkenalkan ideologi kebangsaan Rukun Negara serta Dasar Ekonomi Baru (DEB) bagi membasmi kemiskinan and menyusun semula masyarakat.</p>
+                            <a href="https://youtu.be/9nYq3FLFChE?si=0elhw15DTEItAhht" target="_blank" class="youtube-btn">▶ Tonton Video di YouTube</a>
+                        </div>
+                    </details>
+                </div>
+            </div>
+
+        </div>
+    
+    <div class="modal" id="infoModal">
+        <div class="modal-content">
+            <h2 id="modalTitle">Tajuk</h2>
+            <div id="modalBody">Kandungan...</div>
+            <button class="close-modal" onclick="closeModal()">Tutup</button>
+        </div>
+    </div>
+
+    <script>
+        function toggleChat() {
+            const chatBox = document.getElementById('aiChatBox');
+            if (chatBox.style.display === 'flex') {
+                chatBox.style.display = 'none';
+            } else {
+                chatBox.style.display = 'flex';
+                document.getElementById('chatInput').focus();
+            }
+        }
+
+        function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const messagesContainer = document.getElementById('chatMessages');
+            
+            if (input.value.trim() === '') return;
+
+            const userMsg = document.createElement('div');
+            userMsg.className = 'chat-msg user';
+            userMsg.innerText = input.value;
+            messagesContainer.appendChild(userMsg);
+
+            const userQuery = input.value.toLowerCase();
+            input.value = '';
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            setTimeout(() => {
+                const aiMsg = document.createElement('div');
+                aiMsg.className = 'chat-msg ai';
+                
+                if (userQuery.includes('melaka') || userQuery.includes('1511')) {
+                    aiMsg.innerText = "Kesultanan Melayu Melaka jatuh pada 24 Ogos 1511 kepada Portugis disebabkan oleh konflik kepimpinan dalaman dan keunggulan teknologi meriam pihak Portugis.";
+                } else if (userQuery.includes('union') || userQuery.includes('1946')) {
+                    aiMsg.innerText = "Malayan Union ditentang hebat kerana menghapuskan kedaulatan Raja-raja Melayu dan memberikan kerakyatan longgar (Jus Soli) kepada imigran.";
+                } else if (userQuery.includes('ma63') || userQuery.includes('1963')) {
+                    aiMsg.innerText = "Perjanjian Malaysia 1963 (MA63) ditandatangani di London bagi menggabungkan Persekutuan Tanah Melayu, Sabah, Sarawak, dan Singapura pada 16 September 1963.";
+                } else if (userQuery.includes('13 mei')) {
+                    aiMsg.innerText = "Tragedi 13 Mei 1969 merupakan rusuhan kaum yang mencetuskan pengenalan Rukun Negara dan Dasar Ekonomi Baru (DEB) bagi menyatukan semula rakyat.";
+                } else {
+                    aiMsg.innerText = "Menarik soalan tu! Anda boleh klik pada mana-mana tajuk garis masa untuk melihat info bertulis atau menonton video rujukan lengkap di dalamnya.";
+                }
+                
+                messagesContainer.appendChild(aiMsg);
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }, 800);
+        }
+
+        function openModal(type) {
+            const modal = document.getElementById('infoModal');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            if(type === 'help') {
+                title.innerText = "ℹ️ Panduan Pengguna";
+                body.innerHTML = `
+                    <p>Selamat datang ke Koswer Merentas Masa!</p>
+                    <ul>
+                        <li><b>Navigasi Atas:</b> Gunakan bar navigasi di bahagian atas untuk tukar halaman.</li>
+                        <li><b>Garis Masa:</b> Klik pada mana-mana tajuk peristiwa sejarah untuk membuka maklumat penuh dan pautan video YouTube.</li>
+                        <li><b>AI Chat:</b> Klik ikon robot di bawah kanan skrin untuk mula berbual dengan bot bantuan.</li>
+                    </ul>`;
+            } else if(type === 'faq') {
+                title.innerText = "💬 Soalan Lazim (FAQ)";
+                body.innerHTML = `
+                    <p><b>Q: Adakah nota ini mengikut silibus rasmi?</b><br>A: Ya, diringkaskan berdasarkan rujukan sejarah penting untuk memudahkan pemahaman kronologi negara.</p>
+                    <p><b>Q: Bagaimana saya mahu hubungi pembangun?</b><br>A: Anda boleh e-mel kumpulan kami di support@merentasmasa.edu.my jika terdapat ralat kandungan.</p>`;
+            }
+            modal.style.display = "flex";
+        }
+
+        function closeModal() {
+            document.getElementById('infoModal').style.display = "none";
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galeri Arkib - Merentas Masa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            /* GANTIKAN 'background.jpg' dengan nama fail gambar anda.
+               linear-gradient di bawah berfungsi sebagai lapisan gelap (overlay) 
+               supaya teks anda tetap jelas dan mudah dibaca.
+            */
+            background-image: linear-gradient(rgba(11, 11, 11, 0.85), rgba(11, 11, 11, 0.85)), url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #ffffff;
+            animation: fadeIn 1s ease;
+            transition: opacity 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- HEADBAR / NAVBAR NAVIGASI --- */
+        .headbar {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; 
+            padding: 0 60px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 1000; 
+            background: rgba(0, 0, 0, 0.4); 
+            backdrop-filter: blur(10px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* BUTANG KEMBALI DI KIRI ATAS */
+        .back-btn {
+            font-family: 'Arial', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(22, 22, 22, 0.5);
+        }
+
+        .back-btn:hover {
+            color: #0b0b0b;
+            background: #f1c40f;
+            border-color: #f1c40f;
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px; 
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Arial', sans-serif; 
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.85;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        /* --- CONTAINER UTAMA --- */
+        .arkib-container {
+            min-height: 100vh;
+            padding: 140px 40px 60px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .arkib-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .arkib-header h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 3rem;
+            color: #f1c40f;
+            text-shadow: 0 0 15px rgba(241,196,15,0.4);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .arkib-header p {
+            font-size: 1.2rem;
+            color: #bdc3c7;
+            font-style: italic;
+        }
+
+        /* --- BUTANG PENAPISAN (FILTER) --- */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 50px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(22, 22, 22, 0.8);
+            border: 1px solid rgba(241, 196, 15, 0.3);
+            color: #ffffff;
+            padding: 10px 24px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: #f1c40f;
+            color: #0b0b0b;
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
+            border-color: #f1c40f;
+        }
+
+        /* --- GRID ARKIB GALLERY --- */
+        .arkib-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .arkib-card {
+            background: linear-gradient(145deg, rgba(22,22,22,0.9), rgba(15,15,15,0.9));
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .arkib-card:hover {
+            transform: scale(1.03);
+            border-color: rgba(241, 196, 15, 0.5);
+            box-shadow: 0 10px 30px rgba(241, 196, 15, 0.15);
+        }
+
+        .arkib-img-box {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+            background: #121212;
+        }
+
+        .arkib-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        .arkib-card:hover .arkib-img {
+            transform: scale(1.1) rotate(1deg);
+        }
+
+        .arkib-card::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.9));
+            pointer-events: none;
+        }
+
+        .arkib-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(11, 11, 11, 0.85);
+            border: 1px solid #f1c40f;
+            color: #f1c40f;
+            padding: 4px 10px;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border-radius: 4px;
+            z-index: 2;
+            text-transform: uppercase;
+        }
+
+        .arkib-info {
+            padding: 20px;
+            position: relative;
+            z-index: 3;
+        }
+
+        .arkib-info h3 {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.15rem;
+            color: #ffffff;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .arkib-card:hover .arkib-info h3 {
+            color: #f1c40f;
+        }
+
+        .arkib-year {
+            font-size: 0.8rem;
+            color: #2b70e4;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* --- INTERACTIVE MODAL POPUP --- */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 5, 5, 0.95);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            padding: 20px;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-content {
+            background: #111111;
+            border: 1px solid #f1c40f;
+            max-width: 750px;
+            width: 100%;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            transform: translateY(-30px);
+            transition: transform 0.4s ease;
+            box-shadow: 0 0 40px rgba(241, 196, 15, 0.2);
+        }
+
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 2rem;
+            color: #ffffff;
+            cursor: pointer;
+            z-index: 10;
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: #f1c40f;
+        }
+
+        .modal-img {
+            width: 100%;
+            max-height: 380px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(241,196,15,0.2);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .modal-body h2 {
+            font-family: 'Arial', sans-serif;
+            color: #f1c40f;
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+
+        .modal-meta {
+            font-family: 'Arial', sans-serif;
+            font-size: 0.85rem;
+            color: #2b70e4;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .modal-desc {
+            font-size: 1rem;
+            color: #bdc3c7;
+            line-height: 1.7;
+            font-style: italic;
+        }
+
+        /* --- RESPONSIVITI --- */
+        @media (max-width: 768px) {
+            .headbar { padding: 0 20px; }
+            .arkib-container { padding: 120px 20px 40px 20px; }
+            .arkib-header h1 { font-size: 2.2rem; }
+            .arkib-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="headbar" onclick="event.stopPropagation();">
+        <a href="javascript:history.back()" class="back-btn">&#8592; Kembali</a>
+        
+        <div class="nav-links">
+            <a href="index.html">Utama</a>
+            <a href="index.html#about">Mengenai Kami</a>
+            <a href="index.html#contact">Hubungi Kami</a>
+            <a href="Help.html">Bantuan</a>
+            <a href="Faq.html">Soalan Lazim</a>
+        </div>
+    </nav>
+
+    <div class="arkib-container">
+        <div class="arkib-header">
+            <h1>Galeri Arkib</h1>
+            <p>"Menyelongkar 10 khazanah digital purba, lembaran manuskrip, dan pemetaan klasik warisan Melayu."</p>
+        </div>
+
+        <div class="filter-container">
+            <button class="filter-btn active" onclick="filterArkib('semua', this)">Semua Khazanah</button>
+            <button class="filter-btn" onclick="filterArkib('manuskrip', this)">Manuskrip Lama</button>
+            <button class="filter-btn" onclick="filterArkib('peta', this)">Peta Klasik</button>
+            <button class="filter-btn" onclick="filterArkib('artifak', this)">Artifak & Senjata</button>
+        </div>
+
+        <div class="arkib-grid">
+
+            <div class="arkib-card" data-category="artifak" onclick="bukaModal(this)">
+                <span class="arkib-tag">Artifak</span>
+                <div class="arkib-img-box">
+                    <img src="arkib1.jpg" alt="Pokok Bunga Emas" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Pokok+Bunga+Emas'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Pokok Bunga Emas</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Pokok Bunga Emas – Hadiah diplomatik daripada negeri-negeri Melayu kepada Kerajaan Siam sebagai lambang hubungan persahabatan.</p>
+            </div>
+
+            <div class="arkib-card" data-category="artifak" onclick="bukaModal(this)">
+                <span class="arkib-tag">Artifak</span>
+                <div class="arkib-img-box">
+                    <img src="arkib2.jpg" alt="Keris Taming Sari" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Keris+Taming+Sari'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Keris Taming Sari</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Keris Taming Sari – Keris lagenda yang dikaitkan dengan Hang Tuah dan menjadi simbol keberanian serta kepahlawanan Melayu.</p>
+            </div>
+
+            <div class="arkib-card" data-category="peta" onclick="bukaModal(this)">
+                <span class="arkib-tag">Peta Klasik</span>
+                <div class="arkib-img-box">
+                    <img src="arkib3.jpg" alt="Peta Golden Chersonese" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Peta+Golden+Chersonese'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Peta Golden Chersonese</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Peta Golden Chersonese – Peta lama yang menunjukkan Semenanjung Tanah Melayu, membantu memahami pandangan dunia terhadap rantau ini pada zaman dahulu.</p>
+            </div>
+
+            <div class="arkib-card" data-category="manuskrip" onclick="bukaModal(this)">
+                <span class="arkib-tag">Manuskrip</span>
+                <div class="arkib-img-box">
+                    <img src="arkib4.jpg" alt="Hukum Kanun Melaka" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Hukum+Kanun+Melaka'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Hukum Kanun Melaka</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Hukum Kanun Melaka – Manuskrip undang-undang Kesultanan Melaka yang menjadi rujukan sistem pentadbiran dan perundangan Melayu.</p>
+            </div>
+
+            <div class="arkib-card" data-category="artifak" onclick="bukaModal(this)">
+                <span class="arkib-tag">Artifak</span>
+                <div class="arkib-img-box">
+                    <img src="arkib5.jpg" alt="Mata Wang Kijang" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Mata+Wang+Kijang'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Mata Wang Kijang</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Mata Wang Kijang – Syiling emas yang digunakan dalam urusan perdagangan, melambangkan kemajuan ekonomi kerajaan Melayu.</p>
+            </div>
+
+            <div class="arkib-card" data-category="peta" onclick="bukaModal(this)">
+                <span class="arkib-tag">Peta Klasik</span>
+                <div class="arkib-img-box">
+                    <img src="arkib6.jpg" alt="Peta Maritim Selat Melaka" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Peta+Maritim+Selat+Melaka'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Peta Maritim Selat Melaka</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Peta Maritim Selat Melaka – Peta laluan perdagangan yang menunjukkan kepentingan Selat Melaka sebagai pusat perdagangan antarabangsa.</p>
+            </div>
+
+            <div class="arkib-card" data-category="artifak" onclick="bukaModal(this)">
+                <span class="arkib-tag">Artifak</span>
+                <div class="arkib-img-box">
+                    <img src="arkib7.jpg" alt="Meriam Gangsa Melayu Klasik" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Meriam+Gangsa+Melayu+Klasik'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Meriam Gangsa Melayu Klasik</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Meriam Gangsa Melayu Klasik – Senjata pertahanan yang digunakan oleh kerajaan-kerajaan Melayu untuk mempertahankan pelabuhan dan kubu.</p>
+            </div>
+
+            <div class="arkib-card" data-category="manuskrip" onclick="bukaModal(this)">
+                <span class="arkib-tag">Manuskrip</span>
+                <div class="arkib-img-box">
+                    <img src="arkib8.jpg" alt="Manuskrip Hikayat Hang Tuah" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Manuskrip+Hikayat+Hang+Tuah'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Manuskrip Hikayat Hang Tuah</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Manuskrip Hikayat Hang Tuah – Manuskrip epik sastera Melayu yang menceritakan tentang kesetiaan dan kepahlawanan Laksamana Hang Tuah.</p>
+            </div>
+
+            <div class="arkib-card" data-category="manuskrip" onclick="bukaModal(this)">
+                <span class="arkib-tag">Manuskrip</span>
+                <div class="arkib-img-box">
+                    <img src="arkib9.jpg" alt="Batu Bersurat Terengganu" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Batu+Bersurat+Terengganu'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Batu Bersurat Terengganu</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Batu Bersurat Terengganu – Bukti awal penggunaan tulisan Jawi dan pelaksanaan undang-undang Islam di Tanah Melayu.</p>
+            </div>
+
+            <div class="arkib-card" data-category="manuskrip" onclick="bukaModal(this)">
+                <span class="arkib-tag">Manuskrip</span>
+                <div class="arkib-img-box">
+                    <img src="arkib10.jpg" alt="Batu Bersurat Kedukan Bukit" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Batu+Bersurat+Kedukan+Bukit'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Batu Bersurat Kedukan Bukit</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Batu Bersurat Kedukan Bukit – Batu bersurat bertarikh 683 Masihi yang ditemui di Palembang, menjadi bukti awal perkembangan bahasa Melayu Kuno.</p>
+            </div>
+
+            <div class="arkib-card" data-category="artifak" onclick="bukaModal(this)">
+                <span class="arkib-tag">Artifak</span>
+                <div class="arkib-img-box">
+                    <img src="arkib11.jpg" alt="Candi Lembah Bujang" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Candi+Lembah+Bujang'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Candi Lembah Bujang</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Candi Lembah Bujang – Lembah Bujang, kompleks candi purba yang menjadi bukti kewujudan tamadun awal serta pengaruh Hindu-Buddha di Tanah Melayu.</p>
+            </div>
+
+            <div class="arkib-card" data-category="artifak" onclick="bukaModal(this)">
+                <span class="arkib-tag">Artifak</span>
+                <div class="arkib-img-box">
+                    <img src="arkib12.jpg" alt="Alat Muzik Nobat Diraja" class="arkib-img" onerror="this.src='https://placehold.co/500x400/1a1a1a/ffffff?text=Alat+Muzik+Nobat+Diraja'">
+                </div>
+                <div class="arkib-info">
+                    <div class="arkib-year">Khazanah: Warisan Melayu</div>
+                    <h3>Alat Muzik Nobat Diraja</h3>
+                </div>
+                <p class="hidden-desc" style="display:none;">Alat Muzik Nobat Diraja – Set alat muzik tradisional yang digunakan dalam istiadat pertabalan dan upacara rasmi kesultanan Melayu, melambangkan kedaulatan institusi raja.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal" id="arkibModal" onclick="tutupModal()">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <span class="modal-close" onclick="tutupModal()">&times;</span>
+            <img src="" alt="Paparan Arkib" class="modal-img" id="modalImg">
+            <div class="modal-body">
+                <h2 id="modalTitle">Nama Khazanah</h2>
+                <div class="modal-meta" id="modalMeta">Kategori</div>
+                <p class="modal-desc" id="modalDesc">Deskripsi lengkap.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function filterArkib(kategori, btn) {
+            // Tukar butang aktif
+            const buttons = document.querySelectorAll('.filter-btn');
+            buttons.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Tapis kad arkib
+            const cards = document.querySelectorAll('.arkib-card');
+            cards.forEach(card => {
+                if (kategori === 'semua' || card.getAttribute('data-category') === kategori) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function bukaModal(element) {
+            const modal = document.getElementById('arkibModal');
+            const imgSrc = element.querySelector('.arkib-img').src;
+            const title = element.querySelector('h3').innerText;
+            const meta = element.querySelector('.arkib-year').innerText;
+            const desc = element.querySelector('.hidden-desc').innerText;
+
+            document.getElementById('modalImg').src = imgSrc;
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalMeta').innerText = meta;
+            document.getElementById('modalDesc').innerText = desc;
+
+            modal.classList.add('active');
+        }
+
+        function tutupModal() {
+            document.getElementById('arkibModal').classList.remove('active');
+        }
+    </script>
+</body>
+</html>

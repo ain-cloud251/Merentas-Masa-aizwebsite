@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zon Aktiviti - Sejarah Melayu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: linear-gradient(rgba(11, 11, 11, 0.9), rgba(11, 11, 11, 0.9)), url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            color: #ffffff;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        /* --- NAVIGASI ATAS PREMIUM --- */
+        .top-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(241, 196, 15, 0.2);
+            padding-bottom: 20px;
+            margin-bottom: 40px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .back-btn {
+            background-color: rgba(22, 22, 22, 0.8);
+            color: #f1c40f;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            border: 1px solid rgba(241, 196, 15, 0.3);
+            transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .back-btn:hover {
+            background-color: #f1c40f;
+            color: #0b0b0b;
+            box-shadow: 0 0 15px rgba(241, 196, 15, 0.4);
+        }
+
+        h1.title-nav {
+            font-size: 2rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        h1.title-nav span { color: #f1c40f; text-shadow: 0 0 10px rgba(241,196,15,0.4); }
+
+        /* --- GRID SELEKSI UTAMA --- */
+        .game-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1100px;
+            margin: 0 auto 50px auto;
+        }
+
+        .game-card {
+            background: linear-gradient(145deg, #161616, #0f0f0f);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .game-card:hover, .game-card.active {
+            border-color: #f1c40f;
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(241, 196, 15, 0.15);
+        }
+
+        .game-card .icon {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            display: block;
+            transition: transform 0.3s;
+        }
+        .game-card:hover .icon { transform: scale(1.1); }
+
+        .game-card h3 {
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+        .game-card.active h3, .game-card:hover h3 { color: #f1c40f; }
+
+        .game-card p {
+            font-size: 0.85rem;
+            color: #888;
+            line-height: 1.4;
+        }
+
+        /* --- ARENA UTAMA PERMAINAN --- */
+        .game-arena {
+            background: linear-gradient(145deg, #111111, #161616);
+            border: 1px solid rgba(241, 196, 15, 0.1);
+            border-radius: 20px;
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 40px 30px;
+            min-height: 400px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        .game-section {
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+
+        .game-section.active {
+            display: block;
+            animation: filterFade 0.6s ease;
+        }
+
+        @keyframes filterFade {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-section h2 {
+            font-size: 1.8rem;
+            color: #f1c40f;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            color: #aaa;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        /* --- 1. MODUL: FLASH CARD --- */
+        .flashcard-container {
+            width: 100%;
+            max-width: 450px;
+            height: 260px;
+            perspective: 1000px;
+            margin: 20px auto;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        .flashcard.flipped { transform: rotateY(180deg); }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #1a2a3a, #2c3e50);
+            color: #fff;
+            border: 2px solid #34495e;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, #1e3f20, #27ae60);
+            color: #fff;
+            transform: rotateY(180deg);
+            border: 2px solid #2ecc71;
+        }
+
+        /* --- 2. MODUL: QUIZ --- */
+        .quiz-score-tracker {
+            font-size: 0.9rem;
+            color: #f1c40f;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        .quiz-option {
+            background-color: #1c1c1c;
+            border: 1px solid rgba(255,255,255,0.05);
+            padding: 15px 20px;
+            margin: 12px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .quiz-option:hover {
+            background-color: #252525;
+            border-color: #f1c40f;
+            transform: translateX(5px);
+        }
+
+        /* --- 3. MODUL: SILANG KATA --- */
+        .crossword-grid {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .crossword-cell {
+            width: 44px;
+            height: 44px;
+            background-color: #1a1a1a;
+            border: 2px solid rgba(241, 196, 15, 0.3);
+            color: white;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .crossword-cell.filled {
+            border-color: #f1c40f;
+            background-color: #222;
+        }
+
+        .direct-input-container {
+            margin: 20px auto;
+            max-width: 350px;
+        }
+
+        .direct-input-field {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 1.2rem;
+            border-radius: 25px;
+            border: 2px solid rgba(241, 196, 15, 0.4);
+            background-color: #111;
+            color: #fff;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .direct-input-field:focus {
+            border-color: #f1c40f;
+            box-shadow: 0 0 10px rgba(241,196,15,0.3);
+        }
+
+        .clue-box {
+            background-color: #0f0f0f;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #f1c40f;
+            margin-bottom: 20px;
+            font-style: italic;
+            color: #bdc3c7;
+            text-align: left;
+            line-height: 1.5;
+        }
+
+        /* --- 4. MODUL: MEMORY MATCH --- */
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 650px;
+            margin: 25px auto;
+        }
+
+        .memory-card {
+            height: 110px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.4s ease;
+            cursor: pointer;
+        }
+
+        .memory-card.flipped { transform: rotateY(180deg); }
+
+        .memory-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            padding: 8px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        }
+
+        .memory-front {
+            background: #222;
+            border: 2px solid rgba(241, 196, 15, 0.4);
+            color: #f1c40f;
+            font-size: 1.8rem;
+        }
+
+        .memory-back {
+            background-color: #1a2a3a;
+            color: #fff;
+            transform: rotateY(180deg);
+            border: 2px solid #2b70e4;
+            line-height: 1.3;
+        }
+
+        .memory-card.matched .memory-back {
+            background-color: #1e3f20;
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+
+        /* GLOBAL BUTTONS & FEEDBACK */
+        .game-btn {
+            background-color: #f1c40f;
+            color: #0b0b0b;
+            border: none;
+            padding: 12px 30px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .game-btn:hover {
+            background-color: #f39c12;
+            box-shadow: 0 0 15px rgba(241,196,15,0.4);
+        }
+
+        .feedback-msg {
+            margin-top: 20px;
+            font-weight: bold;
+            font-size: 1.05rem;
+            min-height: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .top-nav { flex-direction: column; gap: 15px; text-align: center; }
+            .memory-grid { grid-template-columns: repeat(2, 1fr); }
+            .crossword-cell { width: 38px; height: 38px; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-nav">
+        <a href="javascript:history.back()" class="back-btn">◀ Kembali</a>
+        <h1 class="title-nav">Zon Aktiviti <span>Merentas Masa</span></h1>
+        <div style="width: 140px;" class="desktop-spacer"></div> 
+    </div>
+
+    <div class="game-selection">
+        <div class="game-card active" onclick="switchGame('flashcard', this)">
+            <span class="icon">🎴</span>
+            <h3>Kad Imbasan Tokoh</h3>
+            <p>Hafal sumbangan, era, dan fakta penting tokoh terbilang.</p>
+        </div>
+        <div class="game-card" onclick="switchGame('quiz', this)">
+            <span class="icon">📝</span>
+            <h3>Kuiz Interaktif</h3>
+            <p>Uji kefahaman garis masa peristiwa penting negara.</p>
+        </div>
+        <div class="game-card" onclick="switchGame('crossword', this)">
+            <span class="icon">🧩</span>
+            <h3>Isi Istilah Sejarah</h3>
+            <p>Taip jawapan terus untuk melengkapkan kata rahsia artifak.</p>
+        </div>
+        <div class="game-card" onclick="switchGame('memory', this)">
+            <span class="icon">🃏</span>
+            <h3>Padanan Memori</h3>
+            <p>Sambungkan padanan peristiwa/identiti sejarah silam.</p>
+        </div>
+    </div>
+
+    <div class="game-arena">
+
+        <div id="game-flashcard" class="game-section active">
+            <h2>Kad Imbasan Tokoh & Peristiwa</h2>
+            <div class="quiz-score-tracker">Kad: <span id="f-num">1</span>/10</div>
+            <p class="subtitle">Klik pada kad untuk memusingkan biografi dan maklumat sejarah!</p>
+            
+            <div class="flashcard-container" onclick="toggleCard()">
+                <div class="flashcard" id="myCard">
+                    <div class="card-face card-front" id="flash-front">Loading...</div>
+                    <div class="card-face card-back" id="flash-back">Loading...</div>
+                </div>
+            </div>
+            <button class="game-btn" onclick="nextFlashcard()">Kad Seterusnya ▶</button>
+        </div>
+
+        <div id="game-quiz" class="game-section">
+            <h2>Kuiz Kronologi Sejarah</h2>
+            <div class="quiz-score-tracker">Soalan: <span id="q-num">1</span>/10 | Markah: <span id="q-score">0</span></div>
+            <div id="quiz-box">
+                <p id="quiz-question" style="font-size: 1.2rem; margin-bottom: 20px; font-weight: bold; line-height: 1.5;"></p>
+                <div id="quiz-options-container"></div>
+            </div>
+            <div id="quiz-result" class="feedback-msg"></div>
+        </div>
+
+        <div id="game-crossword" class="game-section">
+            <h2>Teka Istilah Pertahanan & Warisan</h2>
+            <div class="quiz-score-tracker">Pusingan: <span id="c-num">1</span>/10</div>
+            <p class="subtitle">Taip jawapan anda terus di kotak bawah tanpa perlu klik sel per sel.</p>
+            <div class="clue-box" id="crossword-clue">Loading clue...</div>
+            
+            <div class="crossword-grid" id="crossword-cells-container"></div>
+
+            <div class="direct-input-container">
+                <input type="text" id="direct-jawapan-input" class="direct-input-field" oninput="updateCrosswordDisplay()">
+            </div>
+
+            <button class="game-btn" onclick="checkCrosswordAnswer()">Semak Istilah</button>
+            <div id="crossword-result" class="feedback-msg"></div>
+        </div>
+
+        <div id="game-memory" class="game-section">
+            <h2>Padanan Memori Kedaulatan</h2>
+            <div class="quiz-score-tracker">Pusingan: <span id="m-round">1</span>/10</div>
+            <p class="subtitle">Buka kad kepingan dan cari pasangan padanan watak & era sejarah dengan tepat.</p>
+            
+            <div class="memory-grid" id="memory-board"></div>
+            <button class="game-btn" onclick="nextMemoryRound()">Pusingan Seterusnya ▶</button>
+            <div id="memory-result" class="feedback-msg" style="color: #2ecc71;"></div>
+        </div>
+
+    </div>
+
+    <script>
+        /* --- AUDIO ASSETS --- */
+        const correctSound = new Audio('correct.MP3'); 
+        const wrongSound = new Audio('wrong.MP3');     
+
+        /* --- SWITCH INTERFACE --- */
+        function switchGame(gameType, cardElement) {
+            document.querySelectorAll('.game-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.game-card').forEach(card => card.classList.remove('active'));
+
+            document.getElementById('game-' + gameType).classList.add('active');
+            cardElement.classList.add('active');
+
+            if(gameType === 'memory') startMemoryGame();
+            if(gameType === 'quiz') startQuiz();
+            if(gameType === 'flashcard') startFlashcard();
+            if(gameType === 'crossword') startCrossword();
+        }
+
+        function shuffle(array) { return array.sort(() => Math.random() - 0.5); }
+
+        /* ==========================================================================
+           1. DATA & LOGIK FLASHCARD (10 Soalan Unik Berdasarkan Tokoh & Arkib)
+           ========================================================================== */
+        const flashDataMaster = [
+            { q: "Siapakah Bendahara Melaka terulung yang terkenal sebagai pereka taktik strategi ketenteraan pintar?", a: "Bendahara Tun Perak (Tokoh Pentadbir Terbilang)" },
+            { q: "Siapakah laksamana yang memiliki kesetiaan mutlak dan lambang pahlawan Melayu dengan keris Taming Sari?", a: "Laksamana Hang Tuah (Ketua Armada Laut Melaka)" },
+            { q: "Siapakah tokoh wanita berdaulat yang mengetuai pemerintahan Kelantan Tradisional dan memperkenalkan mata wang syiling Kijang?", a: "Cik Siti Wan Kembang (Pemerintah Wanita Legenda)" },
+            { q: "Siapakah pengasas Kesultanan Melayu Melaka pada sekitar tahun 1400?", a: "Parameswara" },
+            { q: "Apakah nama piagam bertulis bertaraf perlembagaan terawal yang disusun oleh Sultan Muzaffar Shah?", a: "Hukum Kanun Melaka" },
+            { q: "Apakah naskhah undang-undang yang digubal untuk mengawal selia keselamatan pelayaran dan pelabuhan Melaka?", a: "Undang-Undang Laut Melaka" },
+            { q: "Siapakah yang mengetuai armada Portugis untuk menyerang dan menawan kota Melaka pada tahun 1511?", a: "Alfonso de Albuquerque" },
+            { q: "Apakah gelaran bagi jawatan yang bertanggungjawab menjaga keselamatan dalam negeri, bandar, dan kota Melaka?", a: "Temenggung" },
+            { q: "Apakah artifak batu bersurat bertarikh 1303 Masihi yang membuktikan kedatangan Islam di Pantai Timur?", a: "Batu Bersurat Terengganu" },
+            { q: "Apakah nama gelaran yang diberikan oleh ahli geografi purba Claudius Ptolemy kepada Semenanjung Tanah Melayu pada abad ke-2?", a: "Golden Chersonese (Semenanjung Emas)" }
+        ];
+        let flashCards = [];
+        let currentFlashIdx = 0;
+        
+        function startFlashcard() {
+            flashCards = shuffle([...flashDataMaster]);
+            currentFlashIdx = 0;
+            initFlashcard();
+        }
+
+        function initFlashcard() {
+            document.getElementById('myCard').classList.remove('flipped');
+            document.getElementById('f-num').innerText = currentFlashIdx + 1;
+            document.getElementById('flash-front').innerText = flashCards[currentFlashIdx].q;
+            document.getElementById('flash-back').innerText = flashCards[currentFlashIdx].a;
+        }
+        
+        function toggleCard() { document.getElementById('myCard').classList.toggle('flipped'); }
+        
+        function nextFlashcard() {
+            document.getElementById('myCard').classList.remove('flipped');
+            setTimeout(() => {
+                currentFlashIdx = (currentFlashIdx + 1) % flashCards.length;
+                initFlashcard();
+            }, 300);
+        }
+
+        /* ==========================================================================
+           2. DATA & LOGIK QUIZ INTERAKTIF (10 Soalan Unik Berdasarkan melayu_nota, Arkib & Tokoh)
+           ========================================================================== */
+        const quizDataMaster = [
+            { q: "Apakah faktor perdagangan utama yang membolehkan empayar Kesultanan Melayu Melaka digelar 'The Venice of the East'?", o: ["Sistem Cukai Adil & Kedudukan Geografi Monson", "Satu-satunya pengeluar kain sutera dunia", "Kekuatan armada kapal terbang purba"], a: 0 },
+            { q: "Siapakah Sultan yang menyusun piagam bertulis bertaraf perlembagaan terawal dinamakan 'Hukum Kanun Melaka'?", o: ["Sultan Alauddin Riayat Shah", "Parameswara", "Sultan Muzaffar Shah"], a: 2 },
+            { q: "Undang-Undang Laut Melaka digubal khas bertujuan mengawal keselamatan dan tatatertib pelayaran milik...", o: ["Pedagang Barat sahaja", "Nakhoda, anak kapal dan aktiviti perdagangan laut", "Pihak Pengawal Istana di darat"], a: 1 },
+            { q: "Berdasarkan catatan rujukan geografi purba abad ke-2 (Geographia oleh Ptolemy), Tanah Melayu pernah digelar dengan nama...", o: ["Negeri Selat", "Semenanjung Emas (Golden Chersonese)", "Swarnabhumi"], a: 1 },
+            { q: "Zaman Prasejarah di Tanah Melayu terbahagi kepada 4 tahap utama mengikut urutan. Apakah tahap KETIGA?", o: ["Zaman Mesolitik", "Zaman Logam", "Zaman Neolitik"], a: 2 },
+            { q: "Jawatan Pembesar Berempat manakah yang bertindak sebagai Ketua Hakim, Ketua Turus Angkatan Perang, and Pemangku Sultan?", o: ["Bendahara", "Laksamana", "Syahbandar"], a: 0 },
+            { q: "Siapakah tokoh pahlawan Melayu Melaka yang berjaya mengalahkan pahlawan Majapahit dan memenangi Keris Taming Sari?", o: ["Hang Jebat", "Hang Tuah", "Tun Perak"], a: 1 },
+            { q: "Batu Bersurat Terengganu yang bertarikh 1303 Masihi ditulis menggunakan tulisan apa?", o: ["Tulisan Kawi", "Tulisan Jawi", "Tulisan Pallava"], a: 1 },
+            { q: "Pada tahun berapakah kota Melaka akhirnya runtuh dan jatuh ke tangan penjajah Portugis?", o: ["1511", "1411", "1641"], a: 0 },
+            { q: "Pembesar yang memegang portfolio menguruskan pasaran, timbangan, dan kebajikan pedagang asing di pelabuhan ialah...", o: ["Temenggung", "Penghulu Bendahari", "Syahbandar"], a: 2 }
+        ];
+        let quizCards = [];
+        let currentQuizIdx = 0;
+        let scoreQuiz = 0;
+
+        function startQuiz() {
+            quizCards = shuffle([...quizDataMaster]);
+            currentQuizIdx = 0;
+            scoreQuiz = 0;
+            document.getElementById('q-score').innerText = scoreQuiz;
+            loadQuizQuestion();
+        }
+
+        function loadQuizQuestion() {
+            document.getElementById('quiz-result').innerText = "";
+            if(currentQuizIdx >= quizCards.length) {
+                document.getElementById('quiz-box').innerHTML = `<h3 style='color:#2ecc71;'>🎉 Tahniah! Anda menamatkan kuiz. Jumlah mata akhir: ${scoreQuiz}/${quizCards.length * 10}</h3>`;
+                return;
+            }
+            document.getElementById('q-num').innerText = currentQuizIdx + 1;
+            let currentQ = quizCards[currentQuizIdx];
+            document.getElementById('quiz-question').innerText = currentQ.q;
+            
+            let htmlOptions = "";
+            currentQ.o.forEach((opt, idx) => {
+                htmlOptions += `<div class="quiz-option" onclick="submitQuizAnswer(${idx})">${opt}</div>`;
+            });
+            document.getElementById('quiz-options-container').innerHTML = htmlOptions;
+        }
+
+        function submitQuizAnswer(chosenIdx) {
+            let correctIdx = quizCards[currentQuizIdx].a;
+            let resDiv = document.getElementById('quiz-result');
+            if(chosenIdx === correctIdx) {
+                scoreQuiz += 10;
+                document.getElementById('q-score').innerText = scoreQuiz;
+                resDiv.innerHTML = "🎉 JAWAPAN TEPAT! +10 Mata.";
+                resDiv.style.color = "#2ecc71";
+                correctSound.play();
+            } else {
+                resDiv.innerHTML = `❌ KURANG TEPAT! Jawapan betul ialah: ${quizCards[currentQuizIdx].o[correctIdx]}`;
+                resDiv.style.color = "#e74c3c";
+                wrongSound.play();
+            }
+            currentQuizIdx++;
+            setTimeout(loadQuizQuestion, 2000);
+        }
+
+        /* ==========================================================================
+           3. DATA & LOGIK TEKA ISTILAH / SILANG KATA (10 Pusingan Perkataan Berbeza)
+           ========================================================================== */
+        const crosswordDataMaster = [
+            { clue: "Senjata artileri gangsa berat bertaraf legenda milik pertahanan Melaka semasa mengekang armada Portugis 1511.", answer: "MERIAM" },
+            { clue: "Nama pengasas Kesultanan Melayu Melaka yang menyaksikan peristiwa kancil menendang anjing.", answer: "PARAMESWARA" },
+            { clue: "Jawatan pembesar pelabuhan yang menguruskan pedagang dan urusan perdagangan antarabangsa.", answer: "SYAHBANDAR" },
+            { clue: "Mata wang logam purba bersimbolkan haiwan ikonik yang diperkenalkan oleh kerajaan Kelantan Tradisional.", answer: "KIJANG" },
+            { clue: "Keris legenda milik pahlawan Hang Tuah yang diperoleh selepas menewaskan Taming Sari.", answer: "TAMINGSARI" },
+            { clue: "Gelaran yang diberikan oleh Ptolemy kepada Tanah Melayu yang membawa maksud 'Semenanjung Emas'.", answer: "CHERSONESE" },
+            { clue: "Piagam perundangan bertulis bertaraf perlembagaan terawal empayar Kesultanan Melayu Melaka.", answer: "HUKUMKANUN" },
+            { clue: "Tulisan tradisional yang digunakan pada khazanah berharga Batu Bersurat Terengganu 1303.", answer: "JAWI" },
+            { clue: "Pembesar utama yang menjadi arkitek strategi pertahanan Melaka menewaskan ancaman Siam.", answer: "TUNPERAK" },
+            { clue: "Kuasa penjajah Barat terawal yang menawan pelabuhan Melaka di bawah pimpinan Alfonso.", answer: "PORTUGIS" }
+        ];
+        let crosswordPool = [];
+        let currentCrosswordIdx = 0;
+
+        function startCrossword() {
+            crosswordPool = shuffle([...crosswordDataMaster]);
+            currentCrosswordIdx = 0;
+            loadCrosswordRound();
+        }
+
+        function loadCrosswordRound() {
+            document.getElementById('crossword-result').innerText = "";
+            document.getElementById('direct-jawapan-input').value = "";
+            
+            if(currentCrosswordIdx >= crosswordPool.length) {
+                document.getElementById('crossword-clue').innerHTML = "<strong style='color:#2ecc71;'>🎉 Syabas! Anda telah berjaya menyelesaikan kesemua 10 istilah khazanah sejarah!</strong>";
+                return;
+            }
+
+            document.getElementById('c-num').innerText = currentCrosswordIdx + 1;
+            let currentItem = crosswordPool[currentCrosswordIdx];
+            document.getElementById('crossword-clue').innerHTML = `<strong>Petunjuk:</strong> ${currentItem.clue} (${currentItem.answer.length} Huruf)`;
+            
+            document.getElementById('direct-jawapan-input').maxLength = currentItem.answer.length;
+
+            let gridHtml = "";
+            for (let i = 0; i < currentItem.answer.length; i++) {
+                gridHtml += `<div class="crossword-cell" id="box${i}"></div>`;
+            }
+            document.getElementById('crossword-cells-container').innerHTML = gridHtml;
+        }
+
+        function updateCrosswordDisplay() {
+            const inputVal = document.getElementById('direct-jawapan-input').value.toUpperCase();
+            let currentItem = crosswordPool[currentCrosswordIdx];
+            
+            for (let i = 0; i < currentItem.answer.length; i++) {
+                const cell = document.getElementById('box' + i);
+                if (cell) {
+                    if (inputVal[i]) {
+                        cell.innerText = inputVal[i];
+                        cell.classList.add('filled');
+                    } else {
+                        cell.innerText = "";
+                        cell.classList.remove('filled');
+                    }
+                }
+            }
+        }
+
+        function checkCrosswordAnswer() {
+            const inputVal = document.getElementById('direct-jawapan-input').value.toUpperCase();
+            let currentItem = crosswordPool[currentCrosswordIdx];
+            const resDiv = document.getElementById('crossword-result');
+
+            if(inputVal === currentItem.answer) {
+                resDiv.innerHTML = "🏆 SYABAS! Istilah itu tepat sekali!";
+                resDiv.style.color = "#2ecc71";
+                correctSound.play();
+                currentCrosswordIdx++;
+                setTimeout(loadCrosswordRound, 2000);
+            } else {
+                resDiv.innerHTML = "❌ Ejaan belum tepat atau tidak cukup huruf. Sila cuba lagi!";
+                resDiv.style.color = "#e74c3c";
+                wrongSound.play();
+            }
+        }
+
+        /* ==========================================================================
+           4. DATA & LOGIK PADANAN MEMORI (10 Pasangan Unik Dibagikan ke 10 Pusingan)
+           ========================================================================== */
+        const memoryPairsMaster = [
+            [ { id: 1, text: "Parameswara" }, { id: 1, text: "Pengasas Melaka 1400" } ],
+            [ { id: 2, text: "Tun Perak" }, { id: 2, text: "Negarawan Terulung" } ],
+            [ { id: 3, text: "Syiling Kijang" }, { id: 3, text: "Arkib Kelantan Purba" } ],
+            [ { id: 4, text: "Hukum Kanun" }, { id: 4, text: "Perlembagaan Melaka" } ],
+            [ { id: 5, text: "Hang Tuah" }, { id: 5, text: "Laksamana Berwibawa" } ],
+            [ { id: 6, text: "1511" }, { id: 6, text: "Kejatuhan Kota Melaka" } ],
+            [ { id: 7, text: "Batu Bersurat" }, { id: 7, text: "Bukti Islam 1303" } ],
+            [ { id: 8, text: "Syahbandar" }, { id: 8, text: "Pengurus Pelabuhan" } ],
+            [ { id: 9, text: "Temenggung" }, { id: 9, text: "Ketua Keselamatan Kota" } ],
+            [ { id: 10, text: "Ptolemy" }, { id: 10, text: "Peta Golden Chersonese" } ]
+        ];
+        
+        let memoryRoundIdx = 0;
+        let firstCard = null, secondCard = null, lockBoard = false, matchesFound = 0;
+
+        function startMemoryGame() {
+            memoryRoundIdx = 0;
+            loadMemoryRound();
+        }
+
+        function loadMemoryRound() {
+            matchesFound = 0;
+            lockBoard = false;
+            firstCard = null;
+            secondCard = null;
+            document.getElementById('memory-result').innerHTML = "";
+
+            if(memoryRoundIdx >= memoryPairsMaster.length) {
+                document.getElementById('memory-board').innerHTML = "";
+                document.getElementById('memory-result').innerHTML = "🏆 MASTERI MEMORI KEBANGSAAN! Anda melengkapkan kesemua 10 pusingan sejarah!";
+                return;
+            }
+
+            document.getElementById('m-round').innerText = memoryRoundIdx + 1;
+            
+            let roundData = [...memoryPairsMaster[memoryRoundIdx]];
+            
+            let poolLain = memoryPairsMaster.filter((_, idx) => idx !== memoryRoundIdx);
+            shuffle(poolLain);
+            
+            for(let i=0; i<3; i++) {
+                roundData.push(poolLain[i][0]);
+                roundData.push(poolLain[i][1]);
+            }
+
+            const board = document.getElementById('memory-board');
+            board.innerHTML = "";
+            const shuffled = shuffle([...roundData]);
+
+            shuffled.forEach(item => {
+                const card = document.createElement('div');
+                card.classList.add('memory-card');
+                card.dataset.id = item.id;
+                card.innerHTML = `
+                    <div class="memory-face memory-front">👑</div>
+                    <div class="memory-face memory-back">${item.text}</div>
+                `;
+                card.addEventListener('click', flipMemoryCard);
+                board.appendChild(card);
+            });
+        }
+
+        function flipMemoryCard() {
+            if (lockBoard || this === firstCard) return;
+            this.classList.add('flipped');
+
+            if (!firstCard) { firstCard = this; return; }
+            secondCard = this;
+            lockBoard = true;
+            
+            firstCard.dataset.id === secondCard.dataset.id ? matchCards() : unflipCards();
+        }
+
+        function matchCards() {
+            firstCard.classList.add('matched');
+            secondCard.classList.add('matched');
+            matchesFound++;
+            
+            correctSound.play();
+
+            if(matchesFound === 4) {
+                document.getElementById('memory-result').innerHTML = "🎉 PUSINGAN SELESAI! Klik 'Pusingan Seterusnya' untuk cabaran baru.";
+            }
+            resetBoard();
+        }
+
+        function unflipCards() {
+            wrongSound.play();
+            setTimeout(() => {
+                firstCard.classList.remove('flipped');
+                secondCard.classList.remove('flipped');
+                resetBoard();
+            }, 1200);
+        }
+
+        function resetBoard() { [firstCard, secondCard] = [null, null]; lockBoard = false; }
+        
+        function nextMemoryRound() {
+            memoryRoundIdx++;
+            loadMemoryRound();
+        }
+
+        /* --- GLOBAL INITIALIZATION ON LOAD --- */
+        window.onload = function() {
+            startFlashcard();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bantuan - Merentas Masa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            /* GANTIKAN 'background.jpg' dengan nama fail gambar anda jika berbeza.
+               linear-gradient di bawah berfungsi sebagai lapisan gelap (overlay) 
+               supaya teks anda tetap jelas, kontras dan mudah dibaca.
+            */
+            background-image: linear-gradient(rgba(11, 11, 11, 0.9), rgba(11, 11, 11, 0.9)), url('background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed; /* Menjadikan background kekal di tempatnya semasa skrol */
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 1s ease;
+            transition: opacity 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* --- HEADBAR / NAVBAR NAVIGASI --- */
+        .headbar {
+            position: fixed; 
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px; 
+            padding: 0 60px; 
+            display: flex;
+            justify-content: space-between; 
+            align-items: center;
+            z-index: 1000; 
+            background: rgba(0, 0, 0, 0.6); /* Dipergelapkan sedikit untuk kontras gambar */
+            backdrop-filter: blur(8px); 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logo {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .logo span {
+            color: #2b70e4; 
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 30px; 
+        }
+
+        .nav-links a {
+            color: #ffffff;
+            text-decoration: none;
+            font-family: 'Arial', sans-serif; 
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+            opacity: 0.85;
+        }
+
+        .nav-links a:hover {
+            opacity: 1;
+        }
+
+        /* --- CONTAINER UTAMA KANDUNGAN --- */
+        .help-container {
+            flex: 1;
+            max-width: 1000px;
+            width: 100%;
+            margin: 130px auto 60px auto;
+            padding: 0 20px;
+        }
+
+        .help-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .help-header h1 {
+            font-family: 'Arial', sans-serif;
+            font-size: 2.8rem;
+            color: #f1c40f; /* Sentuhan warna emas klasik */
+            text-shadow: 0 0 12px rgba(241,196,15,0.3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+        }
+
+        .help-header p {
+            font-size: 1.1rem;
+            color: #bdc3c7;
+            font-style: italic;
+        }
+
+        /* --- SEKSYEN LANGKAH PENGGUNAAN (USER GUIDE) --- */
+        .help-section-title {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.8rem;
+            color: #f1c40f;
+            margin-bottom: 25px;
+            border-bottom: 2px solid rgba(241, 196, 15, 0.2);
+            padding-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 60px;
+        }
+
+        .guide-card {
+            background-color: rgba(22, 22, 22, 0.85); /* Ditambah opacity lutsinar supaya nampak background belakang */
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 30px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .guide-step-num {
+            background-color: #f1c40f;
+            color: #0b0b0b;
+            font-family: 'Arial', sans-serif;
+            font-weight: bold;
+            font-size: 1.2rem;
+            min-width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(241,196,15,0.4);
+        }
+
+        .guide-text h3 {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.25rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .guide-text p {
+            font-size: 0.95rem;
+            color: #bdc3c7;
+            line-height: 1.6;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* --- SEKSYEN TROUBLESHOOTING (MASALAH TEKNIKAL) --- */
+        .trouble-box {
+            background-color: rgba(17, 17, 17, 0.85); /* Ditambah opacity lutsinar */
+            backdrop-filter: blur(4px);
+            border: 1px dashed rgba(241, 196, 15, 0.3);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 5px;
+        }
+
+        .trouble-item {
+            margin-bottom: 25px;
+        }
+
+        .trouble-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .trouble-item h4 {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.1rem;
+            color: #e74c3c; /* Warna amaran merah lembut untuk isu */
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .trouble-item p {
+            font-size: 0.95rem;
+            color: #cccccc;
+            line-height: 1.6;
+            padding-left: 24px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* --- BOTTON HUBUNGI BANTUAN --- */
+        .help-footer-action {
+            text-align: center;
+            margin-top: 50px;
+            background-color: rgba(22, 22, 22, 0.85); /* Ditambah opacity lutsinar */
+            backdrop-filter: blur(4px);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .help-footer-action p {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.05rem;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .contact-link-btn {
+            display: inline-block;
+            background: transparent;
+            color: #f1c40f;
+            border: 1px solid #f1c40f;
+            padding: 12px 30px;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .contact-link-btn:hover {
+            background-color: #f1c40f;
+            color: #0b0b0b;
+            box-shadow: 0 0 15px rgba(241,196,15,0.3);
+        }
+
+        /* --- FOOTER HAK CIPTA --- */
+        .main-footer {
+            background-color: rgba(11, 11, 11, 0.9);
+            color: #555555;
+            text-align: center;
+            padding: 25px 20px;
+            font-family: 'Arial', sans-serif;
+            font-size: 0.85rem;
+            border-top: 1px solid #161616;
+            margin-top: auto;
+        }
+
+        /* --- RESPONSIVITI --- */
+        @media (max-width: 850px) {
+            .guide-grid {
+                grid-template-columns: 1fr; /* Jadi 1 baris di skrin tablet/telefon */
+            }
+            .headbar {
+                padding: 0 20px;
+            }
+            .help-header h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="headbar" onclick="event.stopPropagation();">
+        <a href="index.html" class="logo">aizwebs<span>i</span>te</a>
+        
+        <div class="nav-links">
+            <a href="index.html">Utama</a>
+            <a href="index.html#about">Tentang Kami</a>
+            <a href="index.html#contact">Hubungi Kami</a>
+            <a href="Help.html" style="opacity: 1; color: #f1c40f;">Bantuan</a>
+            <a href="Faq.html">Soalan Lazim</a>
+        </div>
+    </nav>
+
+    <div class="help-container">
+        <div class="help-header">
+            <h1>Pusat Bantuan</h1>
+            <p>Panduan lengkap bagi memudahkan navigasi dan penerokaan anda.</p>
+        </div>
+
+        <h2 class="help-section-title">🧭 Langkah Navigasi Portal</h2>
+        <div class="guide-grid">
+            
+            <div class="guide-card">
+                <div class="guide-step-num">1</div>
+                <div class="guide-text">
+                    <h3>Memasuki Menu Utama</h3>
+                    <p>Pada halaman utama (Utama), klik butang <strong>"Mula Meneroka"</strong>. Sistem akan membawa anda terus ke paparan menu Peristiwa Bersejarah.</p>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-step-num">2</div>
+                <div class="guide-text">
+                    <h3>Membaca Nota Interaktif</h3>
+                    <p>Pilih kad <strong>"Peristiwa Bersejarah"</strong> untuk mengakses susur masa sejarah, manakala kad <strong>"Tokoh Terbilang"</strong> menyediakan biografi pahlawan tamadun Melayu.</p>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-step-num">3</div>
+                <div class="guide-text">
+                    <h3>Menguji Kefahaman (Kuiz)</h3>
+                    <p>Masuk ke menu <strong>"Kuiz Interaktif"</strong>. Jawab soalan pelbagai pilihan yang disediakan untuk menguji tahap kefahaman intelek anda mengenai sejarah tanah air.</p>
+                </div>
+            </div>
+
+            <div class="guide-card">
+                <div class="guide-step-num">4</div>
+                <div class="guide-text">
+                    <h3>Meneroka Galeri Arkib</h3>
+                    <p>Klik menu <strong>"Galeri Arkib"</strong> untuk memaparkan koleksi pendigitalan manuskrip lama, peta sejarah, dan artifak klasik.</p>
+                </div>
+            </div>
+
+        </div>
+
+        <h2 class="help-section-title">🛠️ Penyelesaian Masalah Teknikal</h2>
+        <div class="trouble-box">
+            
+            <div class="trouble-item">
+                <h4>⚠️ Isu 1: Video Latar Belakang di Halaman Utama Tidak Berputar (Lag/Stuck)</h4>
+                <p>Masalah ini biasanya berlaku akibat kekangan sambungan internet yang perlahan atau mod penjimatan bateri pelayar web anda aktif. Sila pastikan sambungan stabil atau cuba 'refresh' semula pelayar halaman web.</p>
+            </div>
+
+            <div class="trouble-item">
+                <h4>⚠️ Isu 2: Asisten Chatbox AI Tidak Memberikan Sebarang Respons</h4>
+                <p>Pastikan perkataan atau frasa kata kunci yang ditaip adalah tepat (contoh: 'hai', 'koswer', 'menu'). Jika skrip gagal berfungsi, tutup ruang sembang dan buka semula ikon widget 💬 tersebut.</p>
+            </div>
+
+            <div class="trouble-item">
+                <h4>⚠️ Isu 3: Kandungan Fail Arkib/Manuskrip Tidak Jelas Semasa Dipaparkan</h4>
+                <p>Oleh kerana dokumen bersumberkan arkib digital lama, resolusi imej mungkin menjejaskan keaslian rupa asal.</p>
+            </div>
+
+        </div>
+
+        <div class="help-footer-action">
+            <p>Masih memerlukan bantuan tambahan atau menghadapi ralat sistem?</p>
+            <a href="index.html#contact" class="contact-link-btn">Hubungi Kami</a>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <p>© 2026 aizwebsite. Hak Cipta Terpelihara.</p>
+    </footer>
+
+    <script>
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!this.getAttribute('href').startsWith('index.html#')) {
+                    e.preventDefault();
+                    let targetUrl = this.getAttribute('href');
+                    document.body.style.opacity = "0";
+                    setTimeout(() => {
+                        window.location.href = targetUrl;
+                    }, 800);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
